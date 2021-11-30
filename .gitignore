@@ -1,4 +1,6 @@
 classes
+**/*.zip
+**/~*.docx
 install/**
 !install/docs
 !install/docs/**
