@@ -1,0 +1,4 @@
+classes
+install/**
+!install/docs
+!install/docs/**
