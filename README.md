@@ -55,7 +55,7 @@ If you want the install to include a .logicsymbol library, you should also inclu
 
 This section describes how to push ACES EB application updates to all users synchronized to a shared library. Library synchronization occurs automatically; this section is only relevant if you want to push out source code updates. When a remote directory is selected, ACES EB will generate `config.txt` inside the chosen directory. This configuration file contains two entries which may be used to push out source code updates.
 
-- `Verson` - The version of ACES EB as specified at the top of [src/ACESEquipmentBuilder.java](src/ACESEquipmentBuilder.java).
+- `Version` - The version of ACES EB as specified at the top of [src/ACESEquipmentBuilder.java](src/ACESEquipmentBuilder.java).
 - `UpdateScript` - The update script to launch. May be resolved absolutely or relatively to location of the remote directory.
 
 When an instance of ACES EB attempts to synchronize with the remote directory, it checks the configuration file before doing anything else. If the internal version of ACES EB is less than the version listed in the configuration file, the application launches the update script and terminates itself. The update script will be passed a parameter specifying the installation location of ACES EB on the local machine.
