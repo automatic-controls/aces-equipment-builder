@@ -1,6 +1,7 @@
 classes
-**/*.zip
-**/~*.docx
+testing
 install/**
 !install/docs
 !install/docs/**
+install/docs/README.html
+**/*.zip
