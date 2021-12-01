@@ -2,18 +2,18 @@
 <launch4jConfig>
   <dontWrapJar>true</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>install\ACES Equipment Builder.jar</jar>
+  <jar>ACES Equipment Builder.jar</jar>
   <outfile>install\ACES Equipment Builder.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
   <priority>normal</priority>
-  <downloadUrl>http://java.com/download</downloadUrl>
+  <downloadUrl></downloadUrl>
   <supportUrl></supportUrl>
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon>Icon.ico</icon>
+  <icon>icon.ico</icon>
   <singleInstance>
     <mutexName>ACES Equipment Builder</mutexName>
     <windowTitle>ACES Equipment Builder</windowTitle>
@@ -23,7 +23,7 @@
   </classPath>
   <jre>
     <path>jre</path>
-    <bundledJre64Bit>false</bundledJre64Bit>
+    <bundledJre64Bit>true</bundledJre64Bit>
     <bundledJreAsFallback>false</bundledJreAsFallback>
     <minVersion></minVersion>
     <maxVersion></maxVersion>
