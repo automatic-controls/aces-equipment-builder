@@ -12,6 +12,7 @@ public class ACESEquipmentBuilder {
   private final static double VERSION = 1.14;
   public final static String lineSeparator = System.lineSeparator();
   public final static String configName = "config.aceseb";
+  private final static String regexHelpWebsite = "https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/regex/Pattern.html";
   private static ImageIcon icon;
   private static ImageIcon helpIcon;
   private static String scriptPlugin;
@@ -90,10 +91,10 @@ public class ACESEquipmentBuilder {
   private static boolean vScroll = false;
   private static boolean hScroll = false;
   private static boolean paint = true;
-  private static boolean autoUpdate = true;
-  private static boolean updateLibrary = true;
-  private static boolean updateFavorites = true;
-  private static boolean updateScripts = true;
+  private static boolean autoSync = true;
+  private static boolean syncLibrary = true;
+  private static boolean syncFavorites = true;
+  private static boolean syncScripts = true;
   private static boolean suggestEntries = true;
   private static boolean groupMin = true;
   private static boolean groupMax = true;
@@ -103,7 +104,6 @@ public class ACESEquipmentBuilder {
   private static String supportMessage = "";
   private static boolean devMode = false;
   private static File helpFile = null;
-  private static File regexHelpFile = null;
   /** Helps to control functions which should be called when the program exits */
   private static volatile boolean onExitCalled = false;
   private static int mouseX = 0;
@@ -111,7 +111,7 @@ public class ACESEquipmentBuilder {
   private static boolean mouseValid = false;
   /** Controls the shortcut: CTRL+D+E+V */
   private static byte devCTRL = 0;
-  private static boolean allowUpdate = true;
+  private static boolean allowSync = true;
   private static String emailTo = "";
   private static String systemDrive;
   public static void main(String[] args){
@@ -143,7 +143,7 @@ public class ACESEquipmentBuilder {
     JFrame loader = new JFrame("Initializing...");
     {
       JLabel lbl = new JLabel();
-      icon = Utilities.load("Icon.png");
+      icon = Utilities.load("icon.png");
       Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
       loader.setIconImage(icon.getImage());
       loader.setBounds((screen.width>>1)-150, (screen.height>>1)-50, 300, 100);
@@ -175,11 +175,10 @@ public class ACESEquipmentBuilder {
     font = new Font("Times New Roman", Font.PLAIN, fontSize);
     localLib = installation.resolve("lib");
     mainConfig = installation.resolve("config.txt");
-    helpFile = installation.resolve("docs\\ACES Equipment Builder.pdf").toFile();
-    regexHelpFile = installation.resolve("docs\\Regular Expressions.pdf").toFile();
+    helpFile = installation.resolve("docs\\README.html").toFile();
     libSubstringPos = localLib.toString().length()+1;
     scriptPlugin = "<plugin path=\"./extras/add-ons/script.logic-plugin\" class-name=\"com.automatedlogic.green.plugin.logicbuilder.script.LogicBuilderMacroPlugin\" />";
-    helpIcon = Utilities.load("Help Icon.png");
+    helpIcon = Utilities.load("help_icon.png");
     helpButtonSize = helpIcon.getIconWidth();
     helpButtonInitialY = initialY+(boxHeight>>1)-(helpButtonSize>>1);
     equipmentNameInput = new JTextField();
@@ -292,7 +291,7 @@ public class ACESEquipmentBuilder {
 
     //Loads the configuration file and updates if necessary.
     if (loadConfig(false)){
-      if (autoUpdate){
+      if (autoSync){
         update();
       }else if (aces!=null){
         loadACESConfig(aces);
@@ -685,6 +684,10 @@ public class ACESEquipmentBuilder {
    */
   private static String regexReplaceText = null;
   private static void regex(Path root){
+    if (acesLib==null){
+      error("The remote library is currently inaccesible.");
+      return;
+    }
     int i;
     {
       JButton openHelp = new JButton("Open Regex Documentation");
@@ -726,13 +729,14 @@ public class ACESEquipmentBuilder {
       });
       openHelp.addActionListener(new ActionListener(){
         public void actionPerformed(ActionEvent e){
-          if (regexHelpFile==null || !regexHelpFile.exists()){
-            error("Cannot locate documentation!\nTry browsing to:\nhttps://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/regex/Pattern.html");
-          }else{
+          try{
+            Desktop.getDesktop().browse(new java.net.URI(regexHelpWebsite));
+          }catch(Exception err){
             try{
-              Desktop.getDesktop().open(regexHelpFile);
-            }catch(Exception err){
-              error("Unable to open "+regexHelpFile.getPath(), err);
+              Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new java.awt.datatransfer.StringSelection(regexHelpWebsite), null);
+              error("The following URL has been copied to your clipboard:\n"+regexHelpWebsite, err);
+            }catch(Exception err2){
+              error("Try browsing to:\n"+regexHelpWebsite, err2);
             }
           }
         }
@@ -916,7 +920,7 @@ public class ACESEquipmentBuilder {
     lib.reset();
     try{
       doLoad();
-      info("Library "+(aces!=null && Files.exists(aces) && (devMode || allowUpdate)?"updated and ":"")+"reloaded!");
+      info("Library "+(aces!=null && Files.exists(aces) && (devMode || allowSync)?"synchronized and ":"")+"reloaded!");
     }catch(Exception err){
       lib.reset();
       error("Unable to reload library.", err);
@@ -1032,9 +1036,6 @@ public class ACESEquipmentBuilder {
     g.dispose();
   }
   private static void repaintExternal(){
-    if (internalImage==null){
-      return;
-    }
     BufferedImage snip = new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
     Graphics2D g = snip.createGraphics();
     g.setFont(font);
@@ -1042,7 +1043,7 @@ public class ACESEquipmentBuilder {
     g.fillRect(0,0,w,h);
     g.setColor(foreground);
     g.drawString("Equipment Name:", 10, initialY+20);
-    if (paint){
+    if (paint && internalImage!=null){
       //The scroll bar position controls where the internal image is drawn to the screen.
       if (hDif<0){
         yOffset = (double)hDif*(vScrollY-topPadding)/(hDif+imageH-scrollLength);
@@ -1101,6 +1102,9 @@ public class ACESEquipmentBuilder {
     MLabel.repaint();
   }
   public static boolean doLoad() throws Exception {
+    if (!Files.exists(localLib)){
+      Files.createDirectories(localLib);
+    }
     StringBuilder sb = new StringBuilder();
     boolean ret = load(lib, sb);
     if (sb.length()!=0){
@@ -1730,18 +1734,18 @@ public class ACESEquipmentBuilder {
   private static void update(){
     if (aces!=null){
       loadACESConfig(aces);
-      if (updateLibrary && Files.exists(aces)){
-        if (allowUpdate || devMode){
+      if (syncLibrary && Files.exists(aces)){
+        if (allowSync || devMode){
           try{
             if (!Files.exists(acesLib)){
               Files.createDirectories(acesLib);
             }
             Utilities.copy(acesLib, localLib);
           }catch(Exception e){
-            error("Failed to update library.", e);
+            error("Failed to synchronize.", e);
           }
         }else{
-          info("Updates have been temporarily disabled.");
+          info("Synchronization has been temporarily disabled.");
         }
       }
     }
@@ -1789,15 +1793,15 @@ public class ACESEquipmentBuilder {
           }
         }
       }
-      if ((allowUpdate || devMode) && updates && aces!=null && Files.exists(aces)){
-        if (updateScripts){
+      if ((allowSync || devMode) && updates && aces!=null && Files.exists(aces)){
+        if (syncScripts){
           if (!Files.exists(acesScripts)){
             Files.createDirectories(acesScripts);
           }
           Utilities.copy(acesScripts,localScripts);
           generateScriptsFile();
         }
-        if (updateFavorites){
+        if (syncFavorites){
           if (!Files.exists(acesFavorites)){
             Files.createDirectories(acesFavorites);
           }
@@ -2001,13 +2005,17 @@ public class ACESEquipmentBuilder {
             acesFavorites = loc.resolve(val);
           }else if (key.equals("Scripts")){
             acesScripts = loc.resolve(val);
-          }else if (key.equals("AllowUpdate")){
-            allowUpdate = Boolean.valueOf(val);
+          }else if (key.equals("AllowSync")){
+            allowSync = Boolean.valueOf(val);
           }else if (key.equals("Version")){
             ver = Double.parseDouble(val);
           }else if (key.equals("UpdateScript")){
-            String tmp = loc.toString();
-            script = val.isEmpty()?"explorer.exe \""+tmp+'"':"cmd /c start \"\" \""+tmp+'\\'+val+"\" "+installation.toString();
+            Path p;
+            if (!val.isEmpty() && (Files.exists(p = Paths.get(val)) || Files.exists(p = loc.resolve(val)))){
+              script = "cmd /c start \"\" \""+p.toAbsolutePath().toString()+"\" "+installation.toString();
+            }else{
+              script = "explorer.exe \""+loc.toString()+'"';
+            }
           }else{
             info("Unrecognized entry in remote configuration file.\n"+acesConfig.toString()+'\n'+str);
           }
@@ -2017,6 +2025,7 @@ public class ACESEquipmentBuilder {
             info("Please install version "+ver+" of ACES Equipment Builder.");
           }else if (JOptionPane.YES_OPTION==JOptionPane.showConfirmDialog(Main, "Do you want to update to version "+ver+" of ACES Equipment Builder?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)){
             try{
+              Logger.log("Updating to version "+ver);
               Runtime.getRuntime().exec(script);
               onExit();
               System.exit(0);
@@ -2031,8 +2040,8 @@ public class ACESEquipmentBuilder {
         if (f.createNewFile()){
           BufferedWriter out = new BufferedWriter(new FileWriter(f,false));
           out.write("Version="+VERSION+lineSeparator);
-          out.write("AllowUpdate="+allowUpdate+lineSeparator);
           out.write("UpdateScript="+lineSeparator);
+          out.write("AllowSync="+allowSync+lineSeparator);
           out.write("Library=Library"+lineSeparator);
           out.write("Favorites=Favorites"+lineSeparator);
           out.write("Scripts=Scripts"+lineSeparator);
@@ -2099,14 +2108,14 @@ public class ACESEquipmentBuilder {
             emailTo = val;
           }else if (key.equals("RemoteDirectoryPath")){
             lib = val;
-          }else if (key.equals("AutoUpdate")){
-            autoUpdate = Boolean.valueOf(val);
-          }else if (key.equals("UpdateLibrary")){
-            updateLibrary = Boolean.valueOf(val);
-          }else if (key.equals("UpdateFavorites")){
-            updateFavorites = Boolean.valueOf(val);
-          }else if (key.equals("UpdateScripts")){
-            updateScripts = Boolean.valueOf(val);
+          }else if (key.equals("AutoSync")){
+            autoSync = Boolean.valueOf(val);
+          }else if (key.equals("SyncLibrary")){
+            syncLibrary = Boolean.valueOf(val);
+          }else if (key.equals("SyncFavorites")){
+            syncFavorites = Boolean.valueOf(val);
+          }else if (key.equals("SyncScripts")){
+            syncScripts = Boolean.valueOf(val);
           }else if (key.equals("AllowHiddenEntries")){
             hideEntries = Boolean.valueOf(val);
           }else if (key.equals("AllowLockedEntries")){
@@ -2184,10 +2193,10 @@ public class ACESEquipmentBuilder {
     BufferedWriter out = new BufferedWriter(new FileWriter(mainConfig.toFile(),false));
     out.write("WebCTRLPath="+WebCTRL+lineSeparator);
     out.write("RemoteDirectoryPath="+(aces==null?lineSeparator:aces.toString()+lineSeparator));
-    out.write("AutoUpdate="+autoUpdate+lineSeparator);
-    out.write("UpdateLibrary="+updateLibrary+lineSeparator);
-    out.write("UpdateFavorites="+updateFavorites+lineSeparator);
-    out.write("UpdateScripts="+updateScripts+lineSeparator);
+    out.write("AutoSync="+autoSync+lineSeparator);
+    out.write("SyncLibrary="+syncLibrary+lineSeparator);
+    out.write("SyncFavorites="+syncFavorites+lineSeparator);
+    out.write("SyncScripts="+syncScripts+lineSeparator);
     out.write("AllowHiddenEntries="+hideEntries+lineSeparator);
     out.write("AllowLockedEntries="+lockedEntries+lineSeparator);
     out.write("AllowDefaultSelections="+defaultSelections+lineSeparator);
@@ -2274,10 +2283,10 @@ public class ACESEquipmentBuilder {
     setupWebCTRL(updates);
   }
   private static void editConfigOptions(){
-    JCheckBox b3 = new JCheckBox("Auto Update", autoUpdate);
-    JCheckBox b4 = new JCheckBox("Update Library", updateLibrary);
-    JCheckBox b5 = new JCheckBox("Update Favorites", updateFavorites);
-    JCheckBox b6 = new JCheckBox("Update Scripts", updateScripts);
+    JCheckBox b3 = new JCheckBox("Auto Synchronize", autoSync);
+    JCheckBox b4 = new JCheckBox("Synchronize Library", syncLibrary);
+    JCheckBox b5 = new JCheckBox("Synchronize Favorites", syncFavorites);
+    JCheckBox b6 = new JCheckBox("Synchronize Scripts", syncScripts);
     if (devMode){
       JCheckBox b7 = new JCheckBox("Allow Hidden Entries", hideEntries);
       JCheckBox b8 = new JCheckBox("Allow Locked Entries", lockedEntries);
@@ -2289,10 +2298,10 @@ public class ACESEquipmentBuilder {
       Object ret = JOptionPane.showInputDialog(Main,params,"Configuration Options v"+VERSION,JOptionPane.OK_CANCEL_OPTION,icon,null,aces==null?"":aces.toString());
       focus();
       if (ret!=null){
-        autoUpdate = b3.isSelected();
-        updateLibrary = b4.isSelected();
-        updateFavorites = b5.isSelected();
-        updateScripts = b6.isSelected();
+        autoSync = b3.isSelected();
+        syncLibrary = b4.isSelected();
+        syncFavorites = b5.isSelected();
+        syncScripts = b6.isSelected();
         hideEntries = b7.isSelected();
         lockedEntries = b8.isSelected();
         defaultSelections = b9.isSelected();
@@ -2319,10 +2328,10 @@ public class ACESEquipmentBuilder {
       int ret = JOptionPane.showOptionDialog(Main,params,"Configuration Options v"+VERSION,JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE,icon,null,null);
       focus();
       if (ret==JOptionPane.OK_OPTION){
-        autoUpdate = b3.isSelected();
-        updateLibrary = b4.isSelected();
-        updateFavorites = b5.isSelected();
-        updateScripts = b6.isSelected();
+        autoSync = b3.isSelected();
+        syncLibrary = b4.isSelected();
+        syncFavorites = b5.isSelected();
+        syncScripts = b6.isSelected();
         saveConfig(false);
         lib.reset();
         try{

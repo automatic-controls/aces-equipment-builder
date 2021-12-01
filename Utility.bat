@@ -1,11 +1,14 @@
 @echo off
 setlocal EnableDelayedExpansion
 
+:: Location of the JDK bin
+set "jdkBin=C:\Program Files\Java\jdk-16.0.1\bin"
+
 :: Location of the Launch4j executable
 set "launch4j=C:\Program Files (x86)\Launch4j\launch4j.exe"
 
-:: Location of the JDK bin
-set "jdkBin=C:\Program Files\Java\jdk-16.0.1\bin"
+:: Location of Grip executable
+set "grip=C:\Python310\Scripts\grip.exe"
 
 set "name=ACES Equipment Builder"
 set "src=%~dp0src"
@@ -46,6 +49,8 @@ echo.
       call :jre %%b
     ) else if /i "%%a" EQU "wrap" (
       call :wrap %%b
+    ) else if /i "%%a" EQU "grip" (
+      call :grip %%b
     ) else (
       call %%a %%b
     )
@@ -60,21 +65,25 @@ echo.
   echo make     -  calls build and pack
   echo exec     -  executes the jar file
   echo jre      -  creates a custom JRE
+  echo grip     -  convert ./install/docs/README.md to html
+  exit /b
+
+:grip
+  "%grip%" "%install%\docs\README.md" --export "%install%\docs\README.html"
   exit /b
 
 :wrap
-  cd "%~dp0"
   "%launch4j%" "%wrapConfig%"
   exit /b
 
-::optional parameter to clean only a specified file or subdirectory tree
+::optional parameter to clean only the specified subdirectory
 :clean
   if exist "%classes%\%*\*" (
     rmdir /Q /S "%classes%\%*" 2>nul
   )
   exit /b
 
-::optional parameter to clean and build only a specified file or subdirectory tree
+::optional parameter to clean and build only a specified file or subdirectory
 ::omit file extensions
 :build
   call :clean %*
@@ -94,8 +103,13 @@ echo.
 
 ::creates the jar archive
 :pack
-  del /F "%jar%" 2>nul
-  "%jdkBin%\jar" -c -M -f "%jar%" -C "%classes%" . -C "%res%" .
+  copy /y "%~dp0LICENSE" "%install%\LICENSE.txt" >nul
+  if exist "%classes%" (
+    del /F "%jar%" 2>nul
+    "%jdkBin%\jar" -c -M -f "%jar%" -C "%classes%" . -C "%res%" .
+  ) else (
+    echo Please use the 'build' command to compile source code.
+  )
   exit /b
 
 ::parameters passed to build
@@ -106,14 +120,35 @@ echo.
 
 ::executes the jar file
 :exec
-  "%jre%\bin\java" -cp "%install%\*" ACESEquipmentBuilder
+  if not exist "%jar%" (
+    echo Please use the 'pack' command to create a .jar archive.
+    exit /b
+  )
+  if not exist "%jre%\bin" (
+    echo Please use the 'jre' command to create a custom runtime image.
+    exit /b
+  )
+  if not exist "%install%\docs\README.html" (
+    echo Please use the 'grip' command to create install\docs\README.html.
+    exit /b
+  )
+  if exist "%install%\%name%.exe" (
+    "%install%\%name%.exe"
+  ) else (
+    echo Please use the 'wrap' command to generate an executable wrapper.
+    "%jre%\bin\java" -cp "%install%\*" ACESEquipmentBuilder
+  )
   exit /b
 
 ::create a custom JRE
 :jre
-  rmdir /Q /S "%jre%" 2>nul
-  setlocal
-  for /f "delims=" %%i in ('""%jdkBin%\jdeps" --print-module-deps "%jar%""') do set "modules=%%i"
-  "%jdkBin%\jlink" --output "%jre%" --add-modules %modules%
-  endlocal
+  if exist "%jar%" (
+    rmdir /Q /S "%jre%" 2>nul
+    setlocal
+    for /f "delims=" %%i in ('""%jdkBin%\jdeps" --print-module-deps "%jar%""') do set "modules=%%i"
+    "%jdkBin%\jlink" --output "%jre%" --add-modules !modules!
+    endlocal
+  ) else (
+    echo Please use the 'pack' command to create a .jar archive.
+  )
   exit /b
