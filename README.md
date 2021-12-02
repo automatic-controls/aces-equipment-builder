@@ -21,7 +21,7 @@ For editing *.logicsymbol* library configuration files, it is recommended to use
 1. Launch [*Utility.bat*](Utility.bat) and use the following commands:
     - `make`
       - Compiles source code and packs *.class* files into *.jar* archive.
-      - Takes an optional parameter to recompile only a specific file (omitting the *.java* extension) or subfolder of [*src*](src). For example, "`make ACESEquipmentBuilder`" compiles only the main class.
+      - Takes an optional parameter to recompile only a specific file (omitting the *.java* extension) or subfolder of [*src*](src). For example, `make ACESEquipmentBuilder` compiles only the main class.
     - `jre`
       - Uses *jdeps* and *jlink* to create a runtime image for the *.jar* archive.
     - `wrap`
