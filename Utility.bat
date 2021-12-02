@@ -7,9 +7,6 @@ set "jdkBin=C:\Program Files\Java\jdk-16.0.1\bin"
 :: Location of the Launch4j executable
 set "launch4j=C:\Program Files (x86)\Launch4j\launch4j.exe"
 
-:: Location of Grip executable
-set "grip=C:\Python310\Scripts\grip.exe"
-
 set "name=ACES Equipment Builder"
 set "src=%~dp0src"
 set "res=%~dp0resources"
@@ -20,6 +17,11 @@ set "jre=%install%\jre"
 set "wrapConfig=%~dp0launch4j_config.xml"
 
 title %name% Development Utility
+
+if not exist "%install%" (
+  mkdir "%install%" >nul 2>nul
+)
+
 :main
 cls
 echo.
@@ -49,8 +51,6 @@ echo.
       call :jre %%b
     ) else if /i "%%a" EQU "wrap" (
       call :wrap %%b
-    ) else if /i "%%a" EQU "grip" (
-      call :grip %%b
     ) else (
       call %%a %%b
     )
@@ -65,11 +65,6 @@ echo.
   echo make     -  calls build and pack
   echo exec     -  executes the jar file
   echo jre      -  creates a custom JRE
-  echo grip     -  convert ./install/docs/README.md to html
-  exit /b
-
-:grip
-  "%grip%" "%install%\docs\README.md" --export "%install%\docs\README.html"
   exit /b
 
 :wrap

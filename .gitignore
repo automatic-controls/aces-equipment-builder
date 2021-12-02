@@ -1,7 +1,5 @@
 classes
 testing
 install/**
-!install/docs
-!install/docs/**
-install/docs/README.html
+!install/README.txt
 **/*.zip

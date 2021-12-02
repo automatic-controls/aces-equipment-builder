@@ -12,6 +12,7 @@ public class ACESEquipmentBuilder {
   private final static double VERSION = 1.14;
   public final static String lineSeparator = System.lineSeparator();
   public final static String configName = "config.aceseb";
+  private final static String documentationWebsite = "https://github.com/automatic-controls/aces-equipment-builder/tree/main/docs";
   private final static String regexHelpWebsite = "https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/regex/Pattern.html";
   private static ImageIcon icon;
   private static ImageIcon helpIcon;
@@ -103,7 +104,6 @@ public class ACESEquipmentBuilder {
   private static boolean defaultSelections = true;
   private static String supportMessage = "";
   private static boolean devMode = false;
-  private static File helpFile = null;
   /** Helps to control functions which should be called when the program exits */
   private static volatile boolean onExitCalled = false;
   private static int mouseX = 0;
@@ -175,7 +175,6 @@ public class ACESEquipmentBuilder {
     font = new Font("Times New Roman", Font.PLAIN, fontSize);
     localLib = installation.resolve("lib");
     mainConfig = installation.resolve("config.txt");
-    helpFile = installation.resolve("docs\\README.html").toFile();
     libSubstringPos = localLib.toString().length()+1;
     scriptPlugin = "<plugin path=\"./extras/add-ons/script.logic-plugin\" class-name=\"com.automatedlogic.green.plugin.logicbuilder.script.LogicBuilderMacroPlugin\" />";
     helpIcon = Utilities.load("help_icon.png");
@@ -358,15 +357,7 @@ public class ACESEquipmentBuilder {
       }
       public void mousePressed(MouseEvent e){
         if (e.getButton()==MouseEvent.BUTTON1){
-          if (helpFile==null || !helpFile.exists()){
-            error("Cannot locate documentation!");
-          }else{
-            try{
-              Desktop.getDesktop().open(helpFile);
-            }catch(Exception err){
-              error("Unable to open "+helpFile.getPath(), err);
-            }
-          }
+          gotoWebsite(documentationWebsite);
         }
       }
     });
@@ -729,16 +720,7 @@ public class ACESEquipmentBuilder {
       });
       openHelp.addActionListener(new ActionListener(){
         public void actionPerformed(ActionEvent e){
-          try{
-            Desktop.getDesktop().browse(new java.net.URI(regexHelpWebsite));
-          }catch(Exception err){
-            try{
-              Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new java.awt.datatransfer.StringSelection(regexHelpWebsite), null);
-              error("The following URL has been copied to your clipboard:\n"+regexHelpWebsite, err);
-            }catch(Exception err2){
-              error("Try browsing to:\n"+regexHelpWebsite, err2);
-            }
-          }
+          gotoWebsite(regexHelpWebsite);
         }
       });
       Object[] params = {openHelp,"Scope: \""+acesLib.relativize(root).toString()+"\\**\\"+configName+'"',regex, multiLine, matchCase, replace, save, "Find:", findText, "Replace:", replaceText};
@@ -852,6 +834,18 @@ public class ACESEquipmentBuilder {
         error("Error occurred while traversing remote library.", e);
       }
       info(count.x==0?("No matches in \""+root.toString()+'"'):((regexReplace && regexSave?"Replaced ":"Found ")+count.x+(count.x==1?" match in \"":" matches in \"")+root.toString()+'"'+sb.toString()));
+    }
+  }
+  private static void gotoWebsite(final String website){
+    try{
+      Desktop.getDesktop().browse(new java.net.URI(website));
+    }catch(Exception err){
+      try{
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new java.awt.datatransfer.StringSelection(website), null);
+        error("The following URL has been copied to your clipboard:\n"+website, err);
+      }catch(Exception err2){
+        error("Try browsing to:\n"+website, err2);
+      }
     }
   }
   private static void findReferences(Item x, boolean indirect){
@@ -1969,7 +1963,7 @@ public class ACESEquipmentBuilder {
       acesLib = null;
       acesFavorites = null;
       acesScripts = null;
-      if (acesConfig==null || !Files.exists(aces)){
+      if (acesConfig==null || aces==null || !Files.exists(aces)){
         return;
       }
       if (Files.exists(acesConfig) && Files.isReadable(acesConfig)){
@@ -2135,7 +2129,7 @@ public class ACESEquipmentBuilder {
           }
         }
         in.close();
-        if (lib==null){
+        if (lib==null || lib.isEmpty()){
           aces = null;
         }else{
           initRemotePaths(lib,updates);
