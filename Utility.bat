@@ -118,10 +118,6 @@ echo.
     echo Please use the 'jre' command to create a custom runtime image.
     exit /b
   )
-  if not exist "%install%\docs\README.html" (
-    echo Please use the 'grip' command to create install\docs\README.html.
-    exit /b
-  )
   if exist "%install%\%name%.exe" (
     "%install%\%name%.exe"
   ) else (
