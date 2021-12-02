@@ -56,5 +56,47 @@ Anytime you see text enclosed by *%* in this document, assume the enclosed text 
 | **CTRL+K** | Rebinds to another installation of *WebCTRL*. If there is only one version installed, it will be automatically selected. The application looks for folders in *%SystemDrive%* which match the regular expression *`WebCTRL\d+\.\d+`* |
 | **CTRL+ALT+K** | Rebinds to another installation of *WebCTRL*. The application will not automatically detect installation directories. You must manually navigate to the appropriate folder. |
 | **CTRL+D+E+V** | Toggles *developer mode*. |
-| **CTRL+F** | Requires *developer mode*. Initiates a global search through all configuration files in the remote library. Refer to [Oracle's Pattern documentation](https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/regex/Pattern.html) for details regarding regular expression syntax. |
+| **CTRL+F** | Requires *developer mode*. Initiates a global search through all configuration files in the remote library. Refer to [*Oracle's* Pattern documentation](https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/regex/Pattern.html) for details regarding regular expression syntax. |
 | **DELETE** | Requires *developer mode*. Deletes the item the mouse is hovering over in the remote library after prompting for confirmation. |
+
+## Right-Click Context Menu
+
+- When *developer mode* is not active, the following menu shows up when you right-click anywhere. When *developer mode* is active, this menu shows up only when you right-click at a location not corresponding to an item.
+
+   | Symbol | Name | Description |
+   |  - | - | - |
+   | ![](../resources/sync.png) | *Synchronize Library* | Equivalent to **F5**. |
+   | ![](../resources/refresh.png) | *Reload Library* | Equivalent to **F3**. |
+   | ![](../resources/eikon.png) | *Launch EIKON* | Equivalent to **CTRL+E**. |
+   | ![](../resources/edit.png) | *Edit Configuration Options* | Equivalent to **CTRL+O**. |
+   | ![](../resources/bind.png) | *Rebind WebCTRL* | Equivalent to **CTRL+K**. |
+   | ![](../resources/open.png) | *Open Log File* | Equivalent to **CTRL+L**. |
+   | ![](../resources/findall.png) | *Global Find Replace* | Requires *developer mode*. Equivalent to **CTRL+F**. |
+
+- The following menu shows up when you are in *developer mode* and right-click on an item.
+
+   | Symbol | Name | Description |
+   |  - | - | - |
+   | ![](../resources/open.png) | *Open* | Opens the item you clicked on in the remote library. If the item corresponds to a *.logicsymbol* file, it will open in *EIKON*. If the item corresponds to a directory, it will open in *Windows File Explorer*. |
+   | ![](../resources/edit.png) | *Configure* | Opens the configuration file corresponding to the item you clicked on in the remote library using the default editor. You should [setup VSCode]() before using this shortcut. If a configuration file does not already exist, one will be created. |
+   | ![](../resources/delete.png) | *Delete* | Deletes the item you clicked on in the remote library. |
+   | ![](../resources/findall.png) | *Find/Replace Within* | Similar to **CTRL+F** except the scope is restricted to everything below the item you clicked on. |
+   | ![](../resources/search.png) | *Find All References* | Searches the library to find all items which have been initialized using a [reference](<!--TODO put link here-->) to the item you clicked on. It is good practice to check which sections of a library rely on an item before making modifications. |
+   | ![](../resources/search.png) | *Find Direct References* | Similar to *Find All References* except that implicit references are not tracked. For example, suppose **A** &#8594; **B** &#8594; **C** &#8594; **D**, meaning **A** refers to **B**, **B** refers to **C**, and **C** refers to **D**. Under these assumptions, *FindAllReferences(**D**) = {**A**, **B**, **C**}* and *FindDirectReferences(**D**) = {**C**}*. |
+
+## *Visual Studio Code*
+
+*VSCode* is the recommended text editor to use for configuring *.logicsymbol* libraries.
+
+1. Install [*Visual Studio Code*](https://code.visualstudio.com/) version 1.62 or later.
+
+1. Install the [*ACES EB* extension](https://github.com/automatic-controls/vscode-aces-equipment-builder) for *VSCode*.
+
+   - This extension provides syntax highlighting and hover-text documentation for *ACES EB* configuration files. Syntax errors are usually indicated by red highlighting (the color is dependent on the theme chosen for *VSCode*).
+
+1. Set *VSCode* as the default editor for *.aceseb* configuration files.
+
+   - *Windows File Explorer &#10148; Right-click .aceseb file &#10148; Open with &#10148; Choose another app &#10148;*
+
+     ![](../docs/vscode_file_assoc.png)
+
