@@ -1,3 +1,0 @@
-# ACES Equipment Builder
-
-TODO
