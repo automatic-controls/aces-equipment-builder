@@ -78,7 +78,7 @@ Anytime you see text enclosed by *%* in this document, assume the enclosed text 
    | Symbol | Name | Description |
    |  - | - | - |
    | ![](../resources/open.png) | *Open* | Opens the item you clicked on in the remote library. If the item corresponds to a *.logicsymbol* file, it will open in *EIKON*. If the item corresponds to a directory, it will open in *Windows File Explorer*. |
-   | ![](../resources/edit.png) | *Configure* | Opens the configuration file corresponding to the item you clicked on in the remote library using the default editor. You should [setup VSCode]() before using this shortcut. If a configuration file does not already exist, one will be created. |
+   | ![](../resources/edit.png) | *Configure* | Opens the configuration file corresponding to the item you clicked on in the remote library using the default editor. You should [setup VSCode](#visual-studio-code) before using this shortcut. If a configuration file does not already exist, one will be created. |
    | ![](../resources/delete.png) | *Delete* | Deletes the item you clicked on in the remote library. |
    | ![](../resources/findall.png) | *Find/Replace Within* | Similar to **CTRL+F** except the scope is restricted to everything below the item you clicked on. |
    | ![](../resources/search.png) | *Find All References* | Searches the library to find all items which have been initialized using a [reference](<!--TODO put link here-->) to the item you clicked on. It is good practice to check which sections of a library rely on an item before making modifications. |
