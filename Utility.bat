@@ -17,11 +17,6 @@ set "jre=%install%\jre"
 set "wrapConfig=%~dp0launch4j_config.xml"
 
 title %name% Development Utility
-
-if not exist "%install%" (
-  mkdir "%install%" >nul 2>nul
-)
-
 :main
 cls
 echo.
