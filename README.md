@@ -6,7 +6,7 @@ This program is a desktop application that interfaces with *WebCTRL* to generate
 
 The primary *.logicsymbol* library should be stored on a shared network drive. *ACES EB* maintains a local copy of the shared library to ensure the application can be used when offline. Synchronization occurs when the application is launched, if the shared library is accessible.
 
-For editing *.logicsymbol* library configuration files, it is recommended to use [*Visual Studio Code*](https://code.visualstudio.com/) with the [*ACES EB* extension](https://github.com/automatic-controls/vscode-aces-equipment-builder). The following documentation is relevant for software developers only. General-use documentation may be found at [*docs/README.md*](docs/README.md).
+For editing *.logicsymbol* library configuration files, it is recommended to use [*Visual Studio Code*](https://code.visualstudio.com/) with the [*ACES EB* extension](https://github.com/automatic-controls/vscode-aces-equipment-builder). The following documentation is relevant for software developers only. General-use documentation may be found at [*docs/README.md*](docs).
 
 ## Compilation
 
