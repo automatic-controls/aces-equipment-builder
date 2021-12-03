@@ -61,3 +61,13 @@ If you are using the [standard installation method](#standard), then it is recom
 ## Miscellaneous Information
   - [*icon.ico*](icon.ico) is used by *Launch4j* to set the icon for the executable wrapper, "*install/ACES Equipment Builder.exe*".
   - All files in [*resources*](resources) are included in the *.jar* archive, "*install/ACES Equipment Builder.jar*".
+
+## Changes Under Consideration
+
+- Move this section into *CHANGELOG.md*
+- Add comments to the source code.
+- Rewrite expression parsing logic in [*Utilities.java*](src/Utilities.java) to support basic arithmetic.
+- Use `java.nio` for all *I/O* operations.
+- Replace custom dynamic array logic with `ArrayList`.
+- Implement *read_lock* and *write_lock* files for controlling access to the remote directory.
+- Separate the contents of [*ACESEquipmentBuilder.java*](src/ACESEquipmentBuilder.java) into many namespace classes.
