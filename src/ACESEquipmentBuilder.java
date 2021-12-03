@@ -9,69 +9,69 @@ import java.nio.channels.*;
 import java.util.regex.*;
 public class ACESEquipmentBuilder {
   /** Used to determine whether updates are available */
-  private final static double VERSION = 1.14;
-  public final static String lineSeparator = System.lineSeparator();
-  public final static String configName = "config.aceseb";
-  private final static String documentationWebsite = "https://github.com/automatic-controls/aces-equipment-builder/tree/main/docs";
-  private final static String regexHelpWebsite = "https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/regex/Pattern.html";
-  private static ImageIcon icon;
-  private static ImageIcon helpIcon;
-  private static String scriptPlugin;
-  private static Path installation = null;
-  private static Path localLib = null;
-  public static int libSubstringPos = 0;
-  private static Path mainConfig = null;
-  private static String WebCTRL = null;
-  private static Path localFavorites = null;
-  private static Path localFavoritesFile = null;
-  private static Path localPlugins = null;
-  private static Path localScripts = null;
-  private static Path localScriptsFile = null;
-  private static Path genScriptFile = null;
-  private static Path aces = null;
-  private static Path acesLib = null;
-  private static Path acesFavorites = null;
-  private static Path acesScripts = null;
-  private static Path acesConfig = null;
-  private static File logFile = null;
+  private final static String VERSION = "2.0.0";
+  public volatile static String lineSeparator;
+  public volatile static String configName;
+  private volatile static String documentationWebsite;
+  private volatile static String regexHelpWebsite;
+  private volatile static ImageIcon icon;
+  private volatile static ImageIcon helpIcon;
+  private volatile static String scriptPlugin;
+  private volatile static Path installation = null;
+  private volatile static Path localLib = null;
+  public volatile static int libSubstringPos = 0;
+  private volatile static Path mainConfig = null;
+  private volatile static String WebCTRL = null;
+  private volatile static Path localFavorites = null;
+  private volatile static Path localFavoritesFile = null;
+  private volatile static Path localPlugins = null;
+  private volatile static Path localScripts = null;
+  private volatile static Path localScriptsFile = null;
+  private volatile static Path genScriptFile = null;
+  private volatile static Path aces = null;
+  private volatile static Path acesLib = null;
+  private volatile static Path acesFavorites = null;
+  private volatile static Path acesScripts = null;
+  private volatile static Path acesConfig = null;
+  private volatile static File logFile = null;
   /** This is the root item containing all other items */
-  public static Folder lib = null;
+  public volatile static Folder lib = null;
   /** This is the primary GUI */
-  public final static JFrame Main = new JFrame("ACES Equipment Builder");
-  public final static JLabel MLabel = new JLabel();
-  private static JMenuItem popupEikon;
-  private static JFileChooser webctrlDirChooser;
-  private static FontMetrics metrics = null;
-  public static JTextField equipmentNameInput;
-  private static JButton generateScriptButton;
-  private static JLabel helpButton;
-  private static JButton feedbackButton;
+  public volatile static JFrame Main = null;
+  public volatile static JLabel MLabel;
+  private volatile static JMenuItem popupEikon;
+  private volatile static JFileChooser webctrlDirChooser;
+  private volatile static FontMetrics metrics = null;
+  public volatile static JTextField equipmentNameInput;
+  private volatile static JButton generateScriptButton;
+  private volatile static JLabel helpButton;
+  private volatile static JButton feedbackButton;
   public final static int fontSize = 20;
   private final static int boxHeight = fontSize+8;
   private final static int buttonWidth = 180;
   private final static int buttonPadding = 10;
   private final static int initialY = 13;
-  private static int helpButtonSize;
-  private static int helpButtonInitialY;
+  private volatile static int helpButtonSize;
+  private volatile static int helpButtonInitialY;
   private final static int rightPad = 15;
-  public static Font font;
+  public volatile static Font font;
   public final static Color foreground = Color.BLACK;
   public final static Color background = Color.WHITE;
   /** The color to use to highlight the help button when the mouse hovers over it */
-  private final static Color helpHighlightColor = new Color(220, 220, 255);
+  private volatile static Color helpHighlightColor;
   private final static Color scrollBarColor = Color.GRAY;
   /** initial width of program window */
-  public static int w = 1000;
+  public volatile static int w = 1000;
   /** initial height of program window */
-  private static int h = 800;
+  private volatile static int h = 800;
   /** Double buffering is used to prevent GUI flashes */
-  private static BufferedImage internalImage = null;
-  public static int imageW = 0;
-  private static int imageH = 0;
-  private static double xOffset = 0;
-  private static double yOffset = 0;
-  private static int wDif = 0;
-  private static int hDif = 0;
+  private volatile static BufferedImage internalImage = null;
+  public volatile static int imageW = 0;
+  private volatile static int imageH = 0;
+  private volatile static double xOffset = 0;
+  private volatile static double yOffset = 0;
+  private volatile static int wDif = 0;
+  private volatile static int hDif = 0;
   private final static int topPadding = initialY+37;
   private final static int bottomPadding = 45;
   private final static int leftPadding = 2;
@@ -85,35 +85,36 @@ public class ACESEquipmentBuilder {
   private final static int scrollLength = 80;
   private final static int vScrollX = 18+scrollWidth;
   private final static int hScrollY = 41+scrollWidth;
-  private static int vScrollY = 0;
-  private static int hScrollX = 0;
-  private static int dragX = 0;
-  private static int dragY = 0;
-  private static boolean vScroll = false;
-  private static boolean hScroll = false;
-  private static boolean paint = true;
-  private static boolean autoSync = true;
-  private static boolean syncLibrary = true;
-  private static boolean syncFavorites = true;
-  private static boolean syncScripts = true;
-  private static boolean suggestEntries = true;
-  private static boolean groupMin = true;
-  private static boolean groupMax = true;
-  private static boolean hideEntries = true;
-  private static boolean lockedEntries = true;
-  private static boolean defaultSelections = true;
-  private static String supportMessage = "";
-  private static boolean devMode = false;
+  private volatile static int vScrollY = 0;
+  private volatile static int hScrollX = 0;
+  private volatile static int dragX = 0;
+  private volatile static int dragY = 0;
+  private volatile static boolean vScroll = false;
+  private volatile static boolean hScroll = false;
+  private volatile static boolean paint = true;
+  private volatile static boolean autoSync = true;
+  private volatile static boolean syncLibrary = true;
+  private volatile static boolean syncFavorites = true;
+  private volatile static boolean syncScripts = true;
+  private volatile static boolean suggestEntries = true;
+  private volatile static boolean groupMin = true;
+  private volatile static boolean groupMax = true;
+  private volatile static boolean hideEntries = true;
+  private volatile static boolean lockedEntries = true;
+  private volatile static boolean defaultSelections = true;
+  private volatile static String supportMessage = "";
+  private volatile static boolean devMode = false;
   /** Helps to control functions which should be called when the program exits */
-  private static volatile boolean onExitCalled = false;
-  private static int mouseX = 0;
-  private static int mouseY = 0;
-  private static boolean mouseValid = false;
+  private volatile static boolean onExitCalled = false;
+  private volatile static int mouseX = 0;
+  private volatile static int mouseY = 0;
+  private volatile static boolean mouseValid = false;
   /** Controls the shortcut: CTRL+D+E+V */
-  private static byte devCTRL = 0;
-  private static boolean allowSync = true;
-  private static String emailTo = "";
-  private static String systemDrive;
+  private volatile static byte devCTRL = 0;
+  private volatile static boolean allowSync = true;
+  private volatile static String emailTo = "";
+  private volatile static String systemDrive;
+  private volatile static boolean initialized = false;
   public static void main(String[] args){
     {
       Exception error = null;
@@ -172,6 +173,11 @@ public class ACESEquipmentBuilder {
     
     Logger.trim(604800000);
     Patterns.init();
+    lineSeparator = System.lineSeparator();
+    configName = "config.aceseb";
+    documentationWebsite = "https://github.com/automatic-controls/aces-equipment-builder/blob/main/docs/README.md";
+    regexHelpWebsite = "https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/regex/Pattern.html";
+    helpHighlightColor = new Color(220, 220, 255);
     font = new Font("Times New Roman", Font.PLAIN, fontSize);
     localLib = installation.resolve("lib");
     mainConfig = installation.resolve("config.txt");
@@ -306,10 +312,9 @@ public class ACESEquipmentBuilder {
       error("Unable to load library.", e);
       lib.reset();
     }
-    Logger.log("Application initialized.");
-    loader.dispose();
-    loader = null;
 
+    Main = new JFrame("ACES Equipment Builder");
+    MLabel = new JLabel();
     Main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     Main.setBounds(200, 100, w, h);
     Main.setIconImage(icon.getImage());
@@ -441,7 +446,7 @@ public class ACESEquipmentBuilder {
               e.consume();
             }
           }else if (key==127){//Delete
-            if (devMode && mouseValid && delete(lib.getItem(new Int(mouseY-topPadding-(int)(yOffset+0.5))))){
+            if (devMode && mouseValid && delete(lib.getItem(new Container<Integer>(mouseY-topPadding-(int)(yOffset+0.5))))){
               repaint();
               e.consume();
             }
@@ -453,7 +458,7 @@ public class ACESEquipmentBuilder {
                 Item.lastClicked.value = Item.lastClicked.max;
               }
               if (tmp!=Item.lastClicked.value){
-                lib.evaluateSuggestions(new Int(0));
+                lib.evaluateSuggestions(new Container<Integer>(0));
                 repaint();
               }
               e.consume();
@@ -466,7 +471,7 @@ public class ACESEquipmentBuilder {
                 Item.lastClicked.value = Item.lastClicked.min;
               }
               if (tmp!=Item.lastClicked.value){
-                lib.evaluateSuggestions(new Int(0));
+                lib.evaluateSuggestions(new Container<Integer>(0));
                 repaint();
               }
               e.consume();
@@ -542,7 +547,7 @@ public class ACESEquipmentBuilder {
           hScroll = true;
           dragX = mouseX;
         }else{
-          Item x = lib.getItem(new Int(mouseY-topPadding-(int)(yOffset+0.5)));
+          Item x = lib.getItem(new Container<Integer>(mouseY-topPadding-(int)(yOffset+0.5)));
           if (e.getButton()==MouseEvent.BUTTON1){
             if (x!=null){
               x.doClick();
@@ -563,6 +568,7 @@ public class ACESEquipmentBuilder {
               if (devMode){
                 popupRegex.setText("Global Find/Replace");
                 popup.add(popupRegex);
+                popup.add(popupConfigure);
               }
             }else{
               popup.add(popupOpen);
@@ -631,49 +637,58 @@ public class ACESEquipmentBuilder {
     MLabel.add(equipmentNameInput);
     MLabel.add(generateScriptButton);
     MLabel.add(helpButton);
-    w = 0;//Forces update on the fist componentResized event
     metrics = MLabel.getFontMetrics(font);
+    //Forces update on the fist componentResized event
+    w = 0;
+
+    Logger.log("Application initialized.");
+    loader.dispose();
+    loader = null;
+    
     Main.setVisible(true);
+    initialized = true;
     focus();
   }
   /**
    * Attempts to focus equipmentNameInput
    */
   private static void focus(){
-    SwingUtilities.invokeLater(new Runnable(){
-      public void run(){
-        equipmentNameInput.requestFocus();
-      }
-    });
+    if (initialized){
+      SwingUtilities.invokeLater(new Runnable(){
+        public void run(){
+          equipmentNameInput.requestFocus();
+        }
+      });
+    }
   }
   /**
    * {@code false} adds the modifier {@code Pattern.LITERAL}
    */
-  private static boolean regexUse = false;
+  private volatile static boolean regexUse = false;
   /**
    * {@code true} adds modifiers {@code Pattern.DOTALL} and {@code Pattern.MULTILINE}
    */
-  private static boolean regexMultiLine = false;
+  private volatile static boolean regexMultiLine = false;
   /**
    * {@code false} adds the modifier {@code Pattern.CASE_INSENSITIVE}
    */
-  private static boolean regexMatchCase = true;
+  private volatile static boolean regexMatchCase = true;
   /**
    * Whether to save changes.
    */
-  private static boolean regexSave = true;
+  private volatile static boolean regexSave = true;
   /**
    * Whether to use the replace function.
    */
-  private static boolean regexReplace = false;
+  private volatile static boolean regexReplace = false;
   /**
    * The expression to be found.
    */
-  private static String regexFindText = null;
+  private volatile static String regexFindText = null;
   /**
    * The expression which replaces any matches.
    */
-  private static String regexReplaceText = null;
+  private volatile static String regexReplaceText = null;
   private static void regex(Path root){
     if (acesLib==null){
       error("The remote library is currently inaccesible.");
@@ -723,8 +738,9 @@ public class ACESEquipmentBuilder {
           gotoWebsite(regexHelpWebsite);
         }
       });
-      Object[] params = {openHelp,"Scope: \""+acesLib.relativize(root).toString()+"\\**\\"+configName+'"',regex, multiLine, matchCase, replace, save, "Find:", findText, "Replace:", replaceText};
+      Object[] params = {openHelp,"Scope: "+acesLib.relativize(root).toString()+"\\**",regex, multiLine, matchCase, replace, save, "Find:", findText, "Replace:", replaceText};
       i = JOptionPane.showConfirmDialog(Main, params, "Configuration File Search Utility", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+      focus();
       regexUse = regex.isSelected();
       regexMultiLine = multiLine.isSelected();
       regexMatchCase = matchCase.isSelected();
@@ -870,31 +886,39 @@ public class ACESEquipmentBuilder {
     }
   }
   private static void openEikon(){
-    String web = WebCTRL;
-    if (web==null){
-      info("Please bind to a WebCTRL instance before attempting to open EIKON.");
-    }else{
-      File f = new File(web+"\\EIKON.exe");
-      if (f.exists()){
-        try{
-          Desktop.getDesktop().open(f);
-        }catch(Exception err){
-          error("Unable to open EIKON.exe.", err);
-        }
+    try{
+      String web = WebCTRL;
+      if (web==null){
+        info("Please bind to a WebCTRL instance before attempting to open EIKON.");
       }else{
-        info("Cannot locate EIKON.exe!");
+        File f = new File(web+"\\EIKON.exe");
+        if (f.exists()){
+          try{
+            Desktop.getDesktop().open(f);
+          }catch(Exception err){
+            error("Unable to open EIKON.exe.", err);
+          }
+        }else{
+          info("Cannot locate EIKON.exe!");
+        }
       }
+    }catch(Exception e){
+      error("Unexpected error occurred.\nPress CTRL+L for details.", e);
     }
   }
   private static void openLog(){
-    if (logFile.exists()){
-      try{
-        Desktop.getDesktop().open(logFile);
-      }catch(Exception err){
-        error("Unable to open log file.", err);
+    try{
+      if (logFile.exists()){
+        try{
+          Desktop.getDesktop().open(logFile);
+        }catch(Exception err){
+          error("Unable to open log file.", err);
+        }
+      }else{
+        info("Cannot locate log file!");
       }
-    }else{
-      info("Cannot locate log file!");
+    }catch(Exception e){
+      error("Unexpected error occurred.\nPress CTRL+L for details.", e);
     }
   }
   private static void F3(){
@@ -923,66 +947,104 @@ public class ACESEquipmentBuilder {
   }
   private static boolean delete(Item x){
     if (x!=null){
-      if (x.origin.exists()){
-        if (JOptionPane.showConfirmDialog(Main, "Are you sure you want to delete "+x.origin.getName()+"?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)==JOptionPane.YES_OPTION){
-          try{
-            Utilities.deleteTree(x.origin.toPath());
-            if (x.file.exists()){
-              Utilities.deleteTree(x.file.toPath());
-            }
-            lib.reset();
+      try{
+        if (x.origin.exists()){
+          int i = JOptionPane.showConfirmDialog(Main, "Are you sure you want to delete "+x.origin.getName()+"?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+          focus();
+          if (i==JOptionPane.YES_OPTION){
             try{
-              doLoad();
-            }catch(Exception err){
+              Utilities.deleteTree(x.origin.toPath());
+              if (x.file.exists()){
+                Utilities.deleteTree(x.file.toPath());
+              }
               lib.reset();
-              error("Unable to reload library.", err);
+              try{
+                doLoad();
+              }catch(Exception err){
+                lib.reset();
+                error("Unable to reload library.", err);
+              }
+              repaint();
+            }catch(Exception e){
+              error("Unable to delete file(s).", e);
             }
-            repaint();
-          }catch(Exception e){
-            error("Unable to delete file(s).", e);
+            return true;
           }
-          return true;
+        }else{
+          info("Cannot locate item!");
         }
-      }else{
-        info("Cannot locate item!");
+      }catch(Exception e){
+        error("Unexpected error occurred.\nPress CTRL+L for details.", e);
       }
     }
     return false;
   }
   private static void openConfig(Item x){
-    if (x!=null){
+    if (x==null){
+      x = lib;
+    }else if (!(x instanceof Folder)){
+      x = x.parent;
+      if (x==null || !(x instanceof Folder)){
+        //Should never occur
+        ACESEquipmentBuilder.error("Unexpected error occurred in openConfig(Item).");
+        return;
+      }
+    }
+    try{
       if (x.origin.exists()){
-        try{
-          File con;
-          if (x.origin.isDirectory()){
-            con = new File(x.origin.getPath()+'\\'+configName);
-          }else{
-            con = new File(x.origin.getParentFile().getPath()+'\\'+configName);
-          }
-          if (con.exists()){
+        File con = new File(x.origin.getPath()+'\\'+configName);
+        if (con.exists()){
+          Desktop.getDesktop().open(con);
+        }else{
+          int i = JOptionPane.showConfirmDialog(Main, "Create a new configuration file?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+          focus();
+          if (i==JOptionPane.YES_OPTION){
+            StringBuilder sb = new StringBuilder();
+            Item y;
+            for (i=0;i<x.len;++i){
+              y = x.items[i];
+              if (y.origin.exists()){
+                if (i!=0){
+                  sb.append(lineSeparator);
+                }
+                sb.append(y.refName);
+              }
+            }
+            y = null;
+            ByteBuffer buf = ByteBuffer.wrap(sb.toString().getBytes());
+            sb = null;
+            try(
+              FileChannel ch = FileChannel.open(con.toPath(), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+            ){
+              while (buf.hasRemaining()){
+                ch.write(buf);
+              }
+            }
+            buf = null;
             Desktop.getDesktop().open(con);
-          }else if (JOptionPane.showConfirmDialog(Main, "Create a new configuration file?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)==JOptionPane.YES_OPTION){
-            con.createNewFile();
-            Desktop.getDesktop().open(con);
           }
-        }catch(Exception e){
-          ACESEquipmentBuilder.error("Unable to open configuration file", e);
         }
       }else{
         ACESEquipmentBuilder.info("Cannot locate item!");
       }
+    }catch(Exception e){
+      ACESEquipmentBuilder.error("Unable to edit configuration file", e);
     }
   }
   private static void open(Item x){
     if (x!=null){
-      if (x.origin.exists()){
-        try{
-          Desktop.getDesktop().open(x.origin);
-        }catch(Exception e){
-          ACESEquipmentBuilder.error("Unable to open "+x.origin.getName(), e);
+      try{
+        if (x.origin.exists()){
+          try{
+            Desktop.getDesktop().open(x.origin);
+          }catch(Exception e){
+            ACESEquipmentBuilder.error("Unable to open "+x.origin.getName(), e);
+          }
+        }else{
+          ACESEquipmentBuilder.info("Cannot locate item!");
         }
-      }else{
-        ACESEquipmentBuilder.info("Cannot locate item!");
+      }catch(Exception e){
+        error("Unexpected error occurred.\nPress CTRL+L for details.", e);
       }
     }
   }
@@ -1104,7 +1166,7 @@ public class ACESEquipmentBuilder {
     if (sb.length()!=0){
       error("The following error(s) occurred while loading the library:"+sb.toString());
     }
-    lib.evaluateSuggestions(new Int(0));
+    lib.evaluateSuggestions(new Container<Integer>(0));
     return ret;
   }
   private static class Line {
@@ -1726,25 +1788,29 @@ public class ACESEquipmentBuilder {
     return true;
   }
   private static void update(){
-    if (aces!=null){
-      loadACESConfig(aces);
-      if (syncLibrary && Files.exists(aces)){
-        if (allowSync || devMode){
-          try{
-            if (!Files.exists(acesLib)){
-              Files.createDirectories(acesLib);
+    try{
+      if (aces!=null){
+        loadACESConfig(aces);
+        if (syncLibrary && Files.exists(aces)){
+          if (allowSync || devMode){
+            try{
+              if (!Files.exists(acesLib)){
+                Files.createDirectories(acesLib);
+              }
+              Utilities.copy(acesLib, localLib);
+            }catch(Exception e){
+              error("Failed to synchronize.", e);
             }
-            Utilities.copy(acesLib, localLib);
-          }catch(Exception e){
-            error("Failed to synchronize.", e);
+          }else{
+            info("Synchronization has been temporarily disabled.");
           }
-        }else{
-          info("Synchronization has been temporarily disabled.");
         }
       }
-    }
-    if (WebCTRL!=null){
-      setupWebCTRL(true);
+      if (WebCTRL!=null){
+        setupWebCTRL(true);
+      }
+    }catch(Exception e){
+      error("Unexpected error occurred.\nPress CTRL+L for details.", e);
     }
   }
   private static void setupWebCTRL(boolean updates){
@@ -1808,55 +1874,63 @@ public class ACESEquipmentBuilder {
     }
   }
   private static void generateFavoritesFile(){
-    if (!Files.exists(localFavoritesFile)){
-      try{
-        Files.createFile(localFavoritesFile);
-      }catch(Exception e){
-        error("Unable to create favorites file.", e);
-        return;
-      }
-    }
-    File[] fileList = localFavorites.toFile().listFiles(new FilenameFilter(){
-      public boolean accept(File dir, String name){
-        return name.endsWith(".logicsymbol");
-      }
-    });
     try{
-      BufferedWriter out = new BufferedWriter(new FileWriter(localFavoritesFile.toFile(),false));
-      out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+lineSeparator+"<favorites>");
-      for (int i=0;i<fileList.length;i++){
-        out.write(lineSeparator+"  <favorite name=\""+toTitleCase(fileList[i].getName().substring(0,fileList[i].getName().length()-12))+"\" description=\"\" file=\""+fileList[i].getAbsolutePath()+"\" />");
+      if (!Files.exists(localFavoritesFile)){
+        try{
+          Files.createFile(localFavoritesFile);
+        }catch(Exception e){
+          error("Unable to create favorites file.", e);
+          return;
+        }
       }
-      out.write(lineSeparator+"</favorites>");
-      out.close();
+      File[] fileList = localFavorites.toFile().listFiles(new FilenameFilter(){
+        public boolean accept(File dir, String name){
+          return name.endsWith(".logicsymbol");
+        }
+      });
+      try{
+        BufferedWriter out = new BufferedWriter(new FileWriter(localFavoritesFile.toFile(),false));
+        out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+lineSeparator+"<favorites>");
+        for (int i=0;i<fileList.length;i++){
+          out.write(lineSeparator+"  <favorite name=\""+toTitleCase(fileList[i].getName().substring(0,fileList[i].getName().length()-12))+"\" description=\"\" file=\""+fileList[i].getAbsolutePath()+"\" />");
+        }
+        out.write(lineSeparator+"</favorites>");
+        out.close();
+      }catch(Exception e){
+        error("Unable to write to favorites file.", e);
+      }
     }catch(Exception e){
-      error("Unable to write to favorites file.", e);
+      error("Unexpected error occurred.\nPress CTRL+L for details.", e);
     }
   }
   private static void generateScriptsFile(){
-    if (!Files.exists(localScriptsFile)){
-      try{
-        Files.createFile(localScriptsFile);
-      }catch(Exception e){
-        error("Unable to create scripts file.", e);
-        return;
-      }
-    }
-    File[] fileList = localScripts.toFile().listFiles(new FilenameFilter(){
-      public boolean accept(File dir, String name){
-        return name.endsWith(".logic-script");
-      }
-    });
     try{
-      BufferedWriter out = new BufferedWriter(new FileWriter(localScriptsFile.toFile(),false));
-      out.write("<scripts>");
-      for (int i=0;i<fileList.length;i++){
-        out.write(lineSeparator+"  <script name=\""+toTitleCase(fileList[i].getName().substring(0,fileList[i].getName().length()-13))+"\" file=\""+fileList[i].getAbsolutePath()+"\" />");
+      if (!Files.exists(localScriptsFile)){
+        try{
+          Files.createFile(localScriptsFile);
+        }catch(Exception e){
+          error("Unable to create scripts file.", e);
+          return;
+        }
       }
-      out.write(lineSeparator+"</scripts>");
-      out.close();
+      File[] fileList = localScripts.toFile().listFiles(new FilenameFilter(){
+        public boolean accept(File dir, String name){
+          return name.endsWith(".logic-script");
+        }
+      });
+      try{
+        BufferedWriter out = new BufferedWriter(new FileWriter(localScriptsFile.toFile(),false));
+        out.write("<scripts>");
+        for (int i=0;i<fileList.length;i++){
+          out.write(lineSeparator+"  <script name=\""+toTitleCase(fileList[i].getName().substring(0,fileList[i].getName().length()-13))+"\" file=\""+fileList[i].getAbsolutePath()+"\" />");
+        }
+        out.write(lineSeparator+"</scripts>");
+        out.close();
+      }catch(Exception e){
+        error("Unable to write to scripts file.", e);
+      }
     }catch(Exception e){
-      error("Unable to write to scripts file.", e);
+      error("Unexpected error occurred.\nPress CTRL+L for details.", e);
     }
   }
   /**
@@ -1968,7 +2042,7 @@ public class ACESEquipmentBuilder {
       }
       if (Files.exists(acesConfig) && Files.isReadable(acesConfig)){
         BufferedReader in = new BufferedReader(new FileReader(acesConfig.toFile()));
-        double ver = VERSION;
+        String ver = null;
         String script = null;
         String str,key,val;
         while (true){
@@ -2002,7 +2076,7 @@ public class ACESEquipmentBuilder {
           }else if (key.equals("AllowSync")){
             allowSync = Boolean.valueOf(val);
           }else if (key.equals("Version")){
-            ver = Double.parseDouble(val);
+            ver = val;
           }else if (key.equals("UpdateScript")){
             Path p;
             if (!val.isEmpty() && (Files.exists(p = Paths.get(val)) || Files.exists(p = loc.resolve(val)))){
@@ -2014,17 +2088,21 @@ public class ACESEquipmentBuilder {
             info("Unrecognized entry in remote configuration file.\n"+acesConfig.toString()+'\n'+str);
           }
         }
-        if (ver>VERSION){
+        if (isNewerVersion(ver)){
           if (script==null){
             info("Please install version "+ver+" of ACES Equipment Builder.");
-          }else if (JOptionPane.YES_OPTION==JOptionPane.showConfirmDialog(Main, "Do you want to update to version "+ver+" of ACES Equipment Builder?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)){
-            try{
-              Logger.log("Updating to version "+ver);
-              Runtime.getRuntime().exec(script);
-              onExit();
-              System.exit(0);
-            }catch(Exception e){
-              error("Failed to update ACES Equipment Builder.", e);
+          }else{
+            int i = JOptionPane.showConfirmDialog(Main, "Do you want to update to version "+ver+" of ACES Equipment Builder?", "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            focus();
+            if (i==JOptionPane.YES_OPTION){
+              try{
+                Logger.log("Updating to version "+ver);
+                Runtime.getRuntime().exec(script);
+                onExit();
+                System.exit(0);
+              }catch(Exception e){
+                error("Failed to update ACES Equipment Builder.", e);
+              }
             }
           }
         }
@@ -2054,6 +2132,49 @@ public class ACESEquipmentBuilder {
     }
     if (acesScripts==null){
       acesScripts = loc.resolve("Scripts");
+    }
+  }
+  private static boolean isNewerVersion(String ver){
+    if (ver==null || VERSION.equals(ver)){
+      return false;
+    }
+    try{
+      StringBuilder sb = new StringBuilder(4);
+      final int len = VERSION.length();
+      final int verLen = ver.length();
+      int a,b,i=0,j=0;
+      char c;
+      while (i<len && j<verLen){
+        sb.setLength(0);
+        for (;i<len;++i){
+          c = VERSION.charAt(i);
+          if (c>='0' && c<='9'){
+            sb.append(c);
+          }else{
+            ++i;
+            break;
+          }
+        }
+        a = sb.length()==0?0:Integer.parseUnsignedInt(sb.toString());
+        sb.setLength(0);
+        for (;j<verLen;++j){
+          c = ver.charAt(j);
+          if (c>='0' && c<='9'){
+            sb.append(c);
+          }else{
+            ++j;
+            break;
+          }
+        }
+        b = sb.length()==0?0:Integer.parseUnsignedInt(sb.toString());
+        if (a!=b){
+          return a<b;
+        }
+      }
+      return i>=len && j<verLen;
+    }catch(Exception e){
+      error("Version component probably exceeds Integer.MAX_VALUE\n"+acesConfig.toString(), e);
+      return false;
     }
   }
   private static boolean sendEmail(String str){
@@ -2202,54 +2323,59 @@ public class ACESEquipmentBuilder {
     out.close();
   }
   private static boolean findWebCTRL(boolean updates, boolean save, boolean manual){
-    String[] fileList = null;
-    if (!manual && systemDrive!=null){
-      fileList = new File(systemDrive).list(new FilenameFilter(){
-        public boolean accept(File dir, String name){
-          return Patterns.webctrl.matcher(name).matches();
+    try{
+      String[] fileList = null;
+      if (!manual && systemDrive!=null){
+        fileList = new File(systemDrive).list(new FilenameFilter(){
+          public boolean accept(File dir, String name){
+            return Patterns.webctrl.matcher(name).matches();
+          }
+        });
+      }
+      String str = null;
+      if (manual || systemDrive==null || fileList.length==0){
+        if (webctrlDirChooser.showDialog(Main, "Select")!=JFileChooser.APPROVE_OPTION){
+          return false;
         }
-      });
-    }
-    String str = null;
-    if (manual || systemDrive==null || fileList.length==0){
-      if (webctrlDirChooser.showDialog(Main, "Select")!=JFileChooser.APPROVE_OPTION){
-        return false;
-      }
-      File f = webctrlDirChooser.getSelectedFile();
-      if (!f.exists()){
-        return false;
-      }
-      str = f.getPath();
-    }else if (fileList.length==1){
-      str = systemDrive+fileList[0];
-    }else{
-      if (WebCTRL==null){
-        double version = 0;
-        for (int i=0;i<fileList.length;i++){
-          try {
-            double ver = Double.valueOf(fileList[i].substring(7));
-            if (ver>version){
-              version = ver;
-              str = fileList[i];
-            }
-          }catch(Exception e){}
+        File f = webctrlDirChooser.getSelectedFile();
+        if (!f.exists()){
+          return false;
         }
+        str = f.getPath();
+      }else if (fileList.length==1){
+        str = systemDrive+fileList[0];
       }else{
-        str = WebCTRL.substring(systemDrive.length());
+        if (WebCTRL==null){
+          double version = 0;
+          for (int i=0;i<fileList.length;i++){
+            try {
+              double ver = Double.valueOf(fileList[i].substring(7));
+              if (ver>version){
+                version = ver;
+                str = fileList[i];
+              }
+            }catch(Exception e){}
+          }
+        }else{
+          str = WebCTRL.substring(systemDrive.length());
+        }
+        int i = JOptionPane.showOptionDialog(Main,"WebCTRL Version:","Configuration",JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE,null,fileList,str);
+        focus();
+        if (i==JOptionPane.CLOSED_OPTION){
+          str = systemDrive+(str==null?fileList[0]:str);
+        }else{
+          str = systemDrive+fileList[i];
+        }
       }
-      int i = JOptionPane.showOptionDialog(Main,"WebCTRL Version:","Configuration",JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE,null,fileList,str);
-      if (i==JOptionPane.CLOSED_OPTION){
-        str = systemDrive+(str==null?fileList[0]:str);
-      }else{
-        str = systemDrive+fileList[i];
+      if (WebCTRL==null || !WebCTRL.equals(str)){
+        initLocalPaths(str, updates);
+        if (save){
+          saveConfig(false);
+        }
+        return true;
       }
-    }
-    if (WebCTRL==null || !WebCTRL.equals(str)){
-      initLocalPaths(str, updates);
-      if (save){
-        saveConfig(false);
-      }
-      return true;
+    }catch(Exception e){
+      error("Unexpected error occurred.\nPress CTRL+L for details.", e);
     }
     return false;
   }

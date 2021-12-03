@@ -329,13 +329,13 @@ public abstract class Item implements Comparable<Item>{
           break;
         }
       }
-      ACESEquipmentBuilder.lib.evaluateSuggestions(new Int(0));
+      ACESEquipmentBuilder.lib.evaluateSuggestions(new Container<Integer>(0));
     }
   }
   /**
    * Evaluates all If-Then statement suggestions
    */
-  public boolean evaluateSuggestions(Int c){
+  public boolean evaluateSuggestions(Container<Integer> c){
     try{
       if (!selected){
         return false;
@@ -565,7 +565,7 @@ public abstract class Item implements Comparable<Item>{
     }
     return height;
   }
-  public Item getItem(Int y){
+  public Item getItem(Container<Integer> y){
     if (y.x<0){
       return null;
     }
