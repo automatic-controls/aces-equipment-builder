@@ -6,7 +6,7 @@ This program is a desktop application that interfaces with *WebCTRL* to generate
 
 The primary *.logicsymbol* library should be stored on a shared network drive. *ACES EB* maintains a local copy of the shared library to ensure the application can be used when offline. Synchronization occurs when the application is launched, if the shared library is accessible.
 
-If you are a software developer who is interested in contributing to *ACES EB*, see the [developer documentation](../../../). If you find a bug in the application, you can email <cvogt@automaticcontrols.net> or [open an issue](https://github.com/automatic-controls/aces-equipment-builder/issues). If an error occurs, please attach the relevant section of your log file. Use **CTRL+L** to open your log file from *ACES EB*.
+If you are a software developer who is interested in contributing to *ACES EB*, see the [developer documentation](../README.md). If you find a bug in the application, you can email <cvogt@automaticcontrols.net> or [open an issue](https://github.com/automatic-controls/aces-equipment-builder/issues). If an error occurs, please attach the relevant section of your log file. Use **CTRL+L** to open your log file from *ACES EB*.
 
 Anytime you see text enclosed by *%* in this document, assume the enclosed text refers to an environment variable of your computer. For example, *%Username%* expands to the username of the currently logged in user. To see what an environment variable expands to, type `echo %VARIABLE%` in *command prompt*.
 
@@ -71,14 +71,15 @@ Anytime you see text enclosed by *%* in this document, assume the enclosed text 
    | ![](../resources/edit.png) | *Edit Configuration Options* | Equivalent to **CTRL+O**. |
    | ![](../resources/bind.png) | *Rebind WebCTRL* | Equivalent to **CTRL+K**. |
    | ![](../resources/open.png) | *Open Log File* | Equivalent to **CTRL+L**. |
-   | ![](../resources/findall.png) | *Global Find Replace* | Requires *developer mode*. Equivalent to **CTRL+F**. |
+   | ![](../resources/findall.png) | *Global Find/Replace* | Requires *developer mode*. Equivalent to **CTRL+F**. |
+   | ![](../resources/edit.png) | *Configure* | Requires *developer mode*. Opens the configuration file corresponding to the root library folder using the default editor. You should [setup VSCode](#visual-studio-code) before using this shortcut. If a configuration file does not already exist, one will be created after prompting for confirmation. |
 
 - The following menu shows up when you are in *developer mode* and right-click on an item.
 
    | Symbol | Name | Description |
    |  - | - | - |
    | ![](../resources/open.png) | *Open* | Opens the item you clicked on in the remote library. If the item corresponds to a *.logicsymbol* file, it will open in *EIKON*. If the item corresponds to a directory, it will open in *Windows File Explorer*. |
-   | ![](../resources/edit.png) | *Configure* | Opens the configuration file corresponding to the item you clicked on in the remote library using the default editor. You should [setup VSCode](#visual-studio-code) before using this shortcut. If a configuration file does not already exist, one will be created. |
+   | ![](../resources/edit.png) | *Configure* | Opens the configuration file corresponding to the item you clicked on in the remote library using the default editor. You should [setup VSCode](#visual-studio-code) before using this shortcut. If a configuration file does not already exist, one will be created after prompting for confirmation. |
    | ![](../resources/delete.png) | *Delete* | Deletes the item you clicked on in the remote library. |
    | ![](../resources/findall.png) | *Find/Replace Within* | Similar to **CTRL+F** except the scope is restricted to everything below the item you clicked on. |
    | ![](../resources/search.png) | *Find All References* | Searches the library to find all items which have been initialized using a [reference](<!--TODO put link here-->) to the item you clicked on. It is good practice to check which sections of a library rely on an item before making modifications. |
