@@ -71,3 +71,5 @@ If you are using the [standard installation method](#standard), then it is recom
 - Replace custom dynamic array logic with `ArrayList`.
 - Implement *read_lock* and *write_lock* files for controlling access to the remote directory.
 - Separate the contents of [*ACESEquipmentBuilder.java*](src/ACESEquipmentBuilder.java) into many namespace classes.
+- Add configuration option to toggle dark mode (requires duplicating the icons in [*resources*](resources)).
+- Compress *PNG* images in [*docs*](docs) to save space.
