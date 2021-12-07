@@ -66,10 +66,13 @@ If you are using the [standard installation method](#standard), then it is recom
 
 - Move this section into *CHANGELOG.md*
 - Add comments to the source code.
-- Rewrite expression parsing logic in [*Utilities.java*](src/Utilities.java) to support basic arithmetic.
+- Refactor code to improve readability and elegance.
+- Make parsing logic more robust (e.g, basic arithmetic).
 - Use `java.nio` for all *I/O* operations.
 - Replace custom dynamic array logic with `ArrayList`.
+- Replace &#119978;*(n)* search algorithms and structures with &#119978;*(log n)*.
+- Use subscription-update model wherever possible (in particular, overhaul processing mechanisms for *If-Then* statements and display names).
 - Implement *read_lock* and *write_lock* files for controlling access to the remote directory.
-- Separate the contents of [*ACESEquipmentBuilder.java*](src/ACESEquipmentBuilder.java) into many namespace classes.
+- Separate the contents of [*ACESEquipmentBuilder.java*](src/ACESEquipmentBuilder.java) into many classes.
 - Add configuration option to toggle dark mode (requires duplicating the icons in [*resources*](resources)).
 - Compress *PNG* images in [*docs*](docs) to save space.
