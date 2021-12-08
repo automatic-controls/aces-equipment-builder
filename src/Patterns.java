@@ -5,7 +5,9 @@ public class Patterns {
   public volatile static Pattern condition;
   public volatile static Pattern getProperty;
   public volatile static Pattern setProperty;
+  public volatile static Pattern refname;
   public static void init(){
+    refname = Pattern.compile("^[a-zA-Z0-9_ ]++$");
     webctrl = Pattern.compile("WebCTRL(\\d++\\.\\d++)");
     group = Pattern.compile("\\s*+Group\\(\\s*+(\\d++)\\s*+,\\s*+(\\d++)\\s*+\\)\\s*+", Pattern.CASE_INSENSITIVE);
     condition = Pattern.compile("Condition\\(\\s*+([^,\"]++),\\s*+(?>([^,\"]++),\\s*+)?\"((?>\\\\.|[^\"])*+)\"\\s*+\\)");

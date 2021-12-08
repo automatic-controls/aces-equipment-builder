@@ -666,9 +666,13 @@ public class ACESEquipmentBuilder {
    */
   private volatile static boolean regexUse = false;
   /**
-   * {@code true} adds modifiers {@code Pattern.DOTALL} and {@code Pattern.MULTILINE}
+   * {@code true} add the modifiers {@code Pattern.MULTILINE}
    */
-  private volatile static boolean regexMultiLine = false;
+  private volatile static boolean regexMultiLine = true;
+  /**
+   * {@code true} add the modifiers {@code Pattern.DOTALL}
+   */
+  private volatile static boolean regexDotAll = false;
   /**
    * {@code false} adds the modifier {@code Pattern.CASE_INSENSITIVE}
    */
@@ -676,7 +680,7 @@ public class ACESEquipmentBuilder {
   /**
    * Whether to save changes.
    */
-  private volatile static boolean regexSave = true;
+  private volatile static boolean regexSave = false;
   /**
    * Whether to use the replace function.
    */
@@ -696,41 +700,59 @@ public class ACESEquipmentBuilder {
     }
     int i;
     {
+      regexSave = false;
+      if (!regexSave && !regexUse){
+        regexReplace = false;
+      }
       JButton openHelp = new JButton("Open Regex Documentation");
       JCheckBox regex = new JCheckBox("Use Regex", regexUse);
-      JCheckBox multiLine = new JCheckBox("Multiline/Dotall Mode", regexMultiLine);
+      JCheckBox multiLine = new JCheckBox("Multiline Mode", regexMultiLine);
+      JCheckBox dotAll = new JCheckBox("Dotall Mode", regexDotAll);
       JCheckBox matchCase = new JCheckBox("Case Sensitive", regexMatchCase);
       JCheckBox replace = new JCheckBox("Replace", regexReplace);
       JCheckBox save = new JCheckBox("Save Changes", regexSave);
       JTextField findText = new JTextField(regexFindText, 18);
       JTextField replaceText = new JTextField(regexReplaceText, 18);
       multiLine.setEnabled(regexUse);
+      dotAll.setEnabled(regexUse);
       replaceText.setEditable(regexReplace);
       save.setEnabled(regexUse && regexReplace);
       regex.addActionListener(new ActionListener(){
         public void actionPerformed(ActionEvent e){
           regexUse = regex.isSelected();
           multiLine.setEnabled(regexUse);
-          if (!save.isEnabled() && regexUse && regexReplace){
-            regexSave = false;
-          }else{
-            regexSave|=!regexUse||!regexReplace;
+          dotAll.setEnabled(regexUse);
+          if (!regexSave && !regexUse){
+            regexReplace = false;
+            replace.setSelected(false);
+            replaceText.setEditable(false);
+            save.setEnabled(false);
           }
-          save.setEnabled(regexUse && regexReplace);
-          save.setSelected(regexSave);
         }
       });
       replace.addActionListener(new ActionListener(){
         public void actionPerformed(ActionEvent e){
           regexReplace = replace.isSelected();
           replaceText.setEditable(regexReplace);
-          if (!save.isEnabled() && regexUse && regexReplace){
+          save.setEnabled(regexReplace);
+          if (!regexReplace){
             regexSave = false;
-          }else{
-            regexSave|=!regexUse||!regexReplace;
+            save.setSelected(false);
+          }else if (!regexUse){
+            regexSave = true;
+            save.setSelected(true);
           }
-          save.setEnabled(regexUse && regexReplace);
-          save.setSelected(regexSave);
+        }
+      });
+      save.addActionListener(new ActionListener(){
+        public void actionPerformed(ActionEvent e){
+          regexSave = save.isSelected();
+          if (!regexSave && !regexUse){
+            regexReplace = false;
+            replace.setSelected(false);
+            replaceText.setEditable(false);
+            save.setEnabled(false);
+          }
         }
       });
       openHelp.addActionListener(new ActionListener(){
@@ -738,11 +760,12 @@ public class ACESEquipmentBuilder {
           gotoWebsite(regexHelpWebsite);
         }
       });
-      Object[] params = {openHelp,"Scope: "+acesLib.relativize(root).toString()+"\\**",regex, multiLine, matchCase, replace, save, "Find:", findText, "Replace:", replaceText};
+      Object[] params = {openHelp,"Scope: "+acesLib.relativize(root).toString()+"\\**",regex, multiLine, dotAll, matchCase, replace, save, "Find:", findText, "Replace:", replaceText};
       i = JOptionPane.showConfirmDialog(Main, params, "Configuration File Search Utility", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
       focus();
       regexUse = regex.isSelected();
       regexMultiLine = multiLine.isSelected();
+      regexDotAll = dotAll.isSelected();
       regexMatchCase = matchCase.isSelected();
       regexReplace = replace.isSelected();
       regexSave = save.isSelected();
@@ -764,6 +787,8 @@ public class ACESEquipmentBuilder {
       }
       if (regexMultiLine){
         flags|=Pattern.MULTILINE;
+      }
+      if (regexDotAll){
         flags|=Pattern.DOTALL;
       }
       if (!regexMatchCase){
@@ -795,7 +820,7 @@ public class ACESEquipmentBuilder {
                   int line, len;
                   int last = 0;
                   StringBuilder sbb = new StringBuilder();
-                  StringBuilder output = regexReplace?new StringBuilder():null;
+                  StringBuilder output = regexReplace&&(regexSave||regexUse)?new StringBuilder():null;
                   do {
                     ++count.x;
                     line = java.util.Collections.binarySearch(linePositions, m.start());
@@ -1352,6 +1377,10 @@ public class ACESEquipmentBuilder {
                 ret = ret.original;
               } while (ret!=null);
             }else{
+              if (!Patterns.refname.matcher(str).matches()){
+                sb.append("\nInvalid reference name \""+str+"\" on line "+line.num+" of "+configRelPath);
+                continue;
+              }
               String p = path+str;
               File file = new File(p);
               if (file.isDirectory()){
@@ -1757,6 +1786,10 @@ public class ACESEquipmentBuilder {
         for (int i=0;i<arr.length;i++){
           if (arr[i].isFile() && arr[i].getName().endsWith(".logicsymbol")){
             str = arr[i].getName().substring(0, arr[i].getName().length()-12);
+            if (!Patterns.refname.matcher(str).matches()){
+              sb.append("\nInvalid reference name for "+relPath+'\\'+str);
+              continue;
+            }
             Symbol sym = new Symbol(arr[i]);
             sym.refName = str;
             sym.originalName = toTitleCase(str);
@@ -1766,8 +1799,13 @@ public class ACESEquipmentBuilder {
         }
         for (int i=0;i<arr.length;i++){
           if (arr[i].isDirectory()){
+            str = arr[i].getName();
+            if (!Patterns.refname.matcher(str).matches()){
+              sb.append("\nInvalid reference name for "+relPath+'\\'+str);
+              continue;
+            }
             Folder dir = new Folder(arr[i]);
-            dir.originalName = arr[i].getName();
+            dir.originalName = str;
             dir.refName = dir.originalName;
             item.add(dir);
           }
