@@ -1392,7 +1392,7 @@ public class ACESEquipmentBuilder {
                   tmpItem = new Symbol(file);
                   tmpItem.originalName = name==null?toTitleCase(str):name;
                   if (addScript){
-                    tmpItem.preScript = "  symbol('"+file.getPath().replace('\\','/')+"')";
+                    tmpItem.preScript = "  symbol('"+p.replace('\\','/')+"')";
                   }
                 }else if (!addScript){
                   tmpItem = new Symbol(new File(p));
@@ -1625,6 +1625,7 @@ public class ACESEquipmentBuilder {
                 }
               }
               if (overlap){
+                group = null;
                 continue;
               }
               group.add(tmpItem);
@@ -1793,7 +1794,8 @@ public class ACESEquipmentBuilder {
             Symbol sym = new Symbol(arr[i]);
             sym.refName = str;
             sym.originalName = toTitleCase(str);
-            sym.preScript = "  symbol('"+arr[i].getPath().replace('\\','/')+"')";
+            str = arr[i].getPath().replace('\\','/');
+            sym.preScript = "  symbol('"+str.substring(0,str.length()-12)+"')";
             item.add(sym);
           }
         }

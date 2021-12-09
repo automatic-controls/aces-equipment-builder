@@ -100,7 +100,7 @@ public abstract class Item implements Comparable<Item>{
       if (sb.length()!=0){
         sb.append('\\');
       }
-      sb.append(name);
+      sb.append(name==null?refName:name);
     }
   }
   public String getRelativeReferencePath(Item root){
@@ -399,20 +399,10 @@ public abstract class Item implements Comparable<Item>{
       failureMessage.setLength(0);
       failureMessage.append("Requirements have not been satisfied.");
     }
-    boolean kill = false;
     for (int i=0;i<groupLen;i++){
       if (groups[i].num<groups[i].min){
-        for (int j=0;j<groups[i].len;j++){
-          if (groups[i].items[j].visible){
-            failureMessage.append("\nGroup minimum has not been met.");
-            ret = false;
-            kill = true;
-            break;
-          }
-        }
-        if (kill){
-          break;
-        }
+        failureMessage.append("\nGroup minimum unsatisfied in "+getRelativeDisplayPath(null));
+        ret = false;
       }
     }
     for (int i=0;i<conLen;i++){
@@ -458,10 +448,12 @@ public abstract class Item implements Comparable<Item>{
       int i = Integer.parseInt(value);
       switch (name.toUpperCase()){
         case "VALUE": {
-          if (i<min){
-            i = min;
-          }else if (i>max){
-            i = max;
+          if (valueChanger){
+            if (i<min){
+              i = min;
+            }else if (i>max){
+              i = max;
+            }
           }
           if (this.value!=i){
             this.value = i;

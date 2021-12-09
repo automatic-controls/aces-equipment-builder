@@ -67,9 +67,12 @@ public class ItemGroup {
    * Controls item visibility
    */
   public void check(){
+    if (max==-1){
+      return;
+    }
     if (num==max){
       for (int k=0;k<len;k++){
-        items[k].visible = items[k].selected;
+        setVisible(items[k], items[k].selected);
       }
     }else{
       for (int k=0;k<len;k++){
