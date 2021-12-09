@@ -198,7 +198,24 @@ As shown in the example, it is possible to include the same file twice; however,
 
 ### Groupings
 
-<!-- TODO -->
+#### Usage
+- `Group(min, max)[ ... ]`
+- `Group(max)[ ... ]`
+
+#### Parameters
+- `min` - The minimum number of selections to enforce for this grouping.
+  - Any positive integer.
+- `max` - The maximum number of selections to enforce for this grouping.
+  - Any positive integer or `INF` to specify infinity.
+
+#### Description
+- Specifies a grouping of items which affects the application in the following ways.
+  - If less than `min` items are selected, then grouped items are shown in red, and an error is thrown when the user attempts to generate a script.
+  - When `max` items are selected, the leftover items are hidden, effectively preventing the user from exceeding `max` selections.
+
+#### Example
+
+![](group_tree.png) ![](group_config1.png) ![](group_config2.png) ![](group_gui_error.png) ![](group_gui.png)
 
 ### Reference Paths
 
