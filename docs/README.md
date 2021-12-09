@@ -267,12 +267,10 @@ To reduce synchronization time and conserve disk space, library sections can be 
 
 
 <!-- General TODO
+   put ACES EB release zip archive on GitHub
    finish this readme file
-   split multiline and dotall into separate config options
-   convert the shared ACES library to the new format
    enroll in FSA with Insperity
    update tinypulse goals
    respond to tinypulse survey
-   take Best Places to Work survey
    update index repository to include what I worked on this week
 -->
