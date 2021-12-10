@@ -175,7 +175,7 @@ Any text editor (e.g, *Notepad*) can be used to edit *.logicsymbol* library conf
 
 1. Install the [*ACES EB* extension](https://github.com/automatic-controls/vscode-aces-equipment-builder) for *VSCode*. This extension provides language support for *ACES EB* configuration files.
 
-   - Download the latest *.vsix* extension release file ([direct download link](https://github.com/automatic-controls/vscode-aces-equipment-builder/releases/download/v1.0.0/aces-eb-language-support-1.0.0.vsix)), and then [install](https://code.visualstudio.com/docs/editor/extension-marketplace#_install-from-a-vsix) the extension in *VSCode*.
+   - Download the latest *.vsix* extension release file ([direct download link](https://github.com/automatic-controls/vscode-aces-equipment-builder/releases/download/v1.0.1/aces-eb-language-support-1.0.1.vsix)), and then [install](https://code.visualstudio.com/docs/editor/extension-marketplace#_install-from-a-vsix) the extension in *VSCode*.
 
      ![](vscode_vsix_install.png)
 
@@ -195,6 +195,7 @@ This section serves as a reference for *.logicsymbol* library configuration file
 - [Groupings](#groupings)
 - [Reference Paths](#reference-paths)
 - [Initialization by Reference](#initialization-by-reference)
+- [Initialization Modifiers](#initialization-modifiers)
 - [Property Retrieval](#property-retrieval)
 - [Boolean Expressions](#boolean-expressions)
 - [Ternary Operators](#ternary-operators)
@@ -206,8 +207,6 @@ This section serves as a reference for *.logicsymbol* library configuration file
 
 ### Direct Initialization
 
-#### Description
-
 Initialization statements are used to load a file or folder into the application. The configuration file must be in the same directory as the item being initialized. If a folder does not have a configuration file, then all contents are loaded. Do not include *.logicsymbol* extensions in the configuration file.
 
 #### Example
@@ -215,8 +214,6 @@ Initialization statements are used to load a file or folder into the application
 ![](direct_init_tree.png) ![](direct_init_gui.png) ![](direct_init_config.png)
 
 ### Comments
-
-#### Description
 
 *Java*-style comments are supported in configuration files. Comments are ignored by the application. Single-line comments start with `//`. Multi-line comments begin with `/*` and end with `*/`. For maximum compatibility, comments should be placed on new lines.
 
@@ -228,8 +225,6 @@ It is also possible to mark a single-line or multi-line section as *developer-on
 
 ### Display Names
 
-#### Description
-
 The display name of each item as shown in the application may be changed by enclosing the new name in double quotes. Certain special characters may be included in display names by enclosing the Unicode hex value in curly braces. An example is shown below where subscript *2* is shown using hex-code *2082*. Other common hex codes can be found on the internet. Use a backslash to escape the following special characters `\{}[]<>?:`
 
 #### Example
@@ -239,6 +234,8 @@ The display name of each item as shown in the application may be changed by encl
 As shown in the example, it is possible to include the same file twice; however, this is not recommended. Generally, it is a bad idea to have two items with identical reference names in the same folder. In this case, the common reference name is *co2*. Refer to [Property Retrieval](#property-retrieval) and [Ternary Operators](#ternary-operators) for additional constructs that can be used with display names.
 
 ### Groupings
+
+Item groupings provide a convenient way to force a user to select at least `min` items and at most `max` items from a given collection.
 
 #### Usage
 - `Group(min, max)[ ... ]`
@@ -261,8 +258,6 @@ Specifies a grouping of items which affects the application in the following way
 
 ### Reference Paths
 
-#### Description
-
 This concept does not stand alone as a configuration file element, but is used by other constructs, like [Initialization by Reference](#initialization-by-reference), [Property Retrieval](#property-retrieval), and [*If-Then* Statements](#if-then-statements). Each element of a configuration file has a context that is associated to a location in the *.logicsymbol* library. Usually, this context is the folder which contains the configuration file. Reference paths are used to change the context to another location in the library.
 
 Slashes are used as the standard path separator. By default, paths are resolved relatively to the surrounding context. If a path starts with a slash, then it is resolved absolutely from the root library folder instead. `~` may be used to jump to the parent context. Path elements are case-sensitive and should not include *.logicsymbol* extensions.
@@ -275,8 +270,6 @@ To refer to the *m<sup>th</sup>* selected element of the *n<sup>th</sup>* group 
 
 ### Initialization by Reference
 
-#### Description
-
 To reduce synchronization time and conserve disk space, library sections can be reused. Any initialization statement containing a slash (`/` or `\`) is treated as a [reference path](#reference-paths) to another section. Relative paths are resolved from the context of the folder containing the configuration file.
 
 To use initialization references properly, you must understand the order in which the application loads sections of the library. You can only reference items that have been previously loaded. The application loads sections using a depth-first search starting with the root library folder.
@@ -287,7 +280,21 @@ To use initialization references properly, you must understand the order in whic
 
 ### Initialization Modifiers
 
-<!-- TODO: explain @*+- modifiers -->
+Each item has three important internal properties: `selected`, `visible`, and `locked`. Clicking on an unlocked item toggles whether it is selected. Locked items cannot be manually selected or deselected by the user. An item is included in in the generated script when it is selected (additionally, all parents must be selected). An item is shown to the user when it is visible (additionally, all parents must be selected and visible).
+
+Initialization modifiers change the default values of these internal properties. If no modifiers are given, then every item is initialized to be deselected, visible, and unlocked. The `+` modifier selects an item. The `-` modifier makes an item invisible. The `*` modifier locks an item.
+
+The `@` modifier does not affect internal properties, but can be used to create synthetic items (i.e, items without a corresponding file or folder in the *.logicsymbol* library). Since these items are not linked to any file resource, they are not included in the generated script. [*PreScript* and *PostScript*](#prescript-and-postscript) sections may be useful for synthetic items. It is also common to use [*If-Then* Statements](#if-then-statements) to select other hidden items based on whether a synthetic item is selected.
+
+| Modifier | Description |
+| - | - |
+| `+` | Initializes an item to be selected by default. |
+| `-` | Initializes an item to be hidden by default. |
+| `*` | Initializes an item to be locked by default. |
+| `@` | Creates a synthetic item (not linked to any files). |
+
+#### Example
+
 
 ### Property Retrieval
 
