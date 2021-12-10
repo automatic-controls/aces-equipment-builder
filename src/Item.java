@@ -403,6 +403,7 @@ public abstract class Item implements Comparable<Item>{
       if (groups[i].num<groups[i].min){
         failureMessage.append("\nGroup minimum unsatisfied in "+getRelativeDisplayPath(null));
         ret = false;
+        break;
       }
     }
     for (int i=0;i<conLen;i++){
