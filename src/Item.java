@@ -63,6 +63,7 @@ public abstract class Item implements Comparable<Item>{
   public static StringBuilder failureMessage = new StringBuilder();
   private static int numItems = 0;
   private int ID;
+  public boolean synthetic = false;
   public Item(File file){
     this.file = file;
     ID = ++numItems;

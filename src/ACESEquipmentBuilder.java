@@ -9,7 +9,7 @@ import java.nio.channels.*;
 import java.util.regex.*;
 public class ACESEquipmentBuilder {
   /** Used to determine whether updates are available */
-  private final static String VERSION = "2.0.0";
+  private final static String VERSION = "2.0.1";
   public volatile static String lineSeparator;
   public volatile static String configName;
   private volatile static String documentationWebsite;
@@ -1361,6 +1361,10 @@ public class ACESEquipmentBuilder {
               if (ret instanceof Symbol){
                 tmpItem = new Symbol(ret.file);
                 tmpItem.originalName = name==null?toTitleCase(str):name;
+                if (!ret.synthetic){
+                  String tmp = ret.file.getPath().replace('\\','/');
+                  tmpItem.preScript = "  symbol('"+tmp.substring(0,tmp.length()-12)+"')";
+                }
               }else{
                 tmpItem = new Folder(ret.file);
                 tmpItem.originalName = name==null?str:name;
@@ -1403,6 +1407,7 @@ public class ACESEquipmentBuilder {
                 }
               }
             }
+            tmpItem.synthetic = !addScript;
             tmpItem.refName = str;
             tmpItem.selected = selected;
             tmpItem.visible = visible;
