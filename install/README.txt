@@ -17,4 +17,4 @@ GitHub
   Repository
     https://github.com/automatic-controls/aces-equipment-builder
   Documentation
-    https://github.com/automatic-controls/aces-equipment-builder/tree/main/docs
+    https://github.com/automatic-controls/aces-equipment-builder/blob/main/docs/README.md
