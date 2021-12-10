@@ -1644,9 +1644,6 @@ public class ACESEquipmentBuilder {
             str = trim;
             if (str.equalsIgnoreCase("] Then [") || str.equalsIgnoreCase("]Then[")){
               type = 5;
-              if (sugGroup.preLen==0 && sugGroup.preExpression==null){
-                sugGroup = null;
-              }
             }else{
               int len = str.length();
               if (str.indexOf('&')!=-1 || str.indexOf('|')!=-1 || str.indexOf('<')!=-1 || str.indexOf('>')!=-1 || str.indexOf('=')!=-1){
@@ -1699,6 +1696,7 @@ public class ACESEquipmentBuilder {
               type = 0;
               if (sugGroup!=null){
                 if (sugGroup.postLen==0 && sugGroup.postExpression==null){
+                  sugGroup = null;
                   continue;
                 }
                 if (suggestEntries){
