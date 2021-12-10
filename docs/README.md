@@ -198,7 +198,7 @@ This section serves as a reference for *.logicsymbol* library configuration file
 - [Property Retrieval](#property-retrieval)
 - [Boolean Expressions](#boolean-expressions)
 - [Ternary Operators](#ternary-operators)
-- [*If-Then* Statments](#if-then-statments)
+- [*If-Then* Statements](#if-then-statements)
 - [*Value* Statements](#value-statements)
 - [*Condition* Statements](#condition-statements)
 - [*PreScript* and *PostScript*](#prescript-and-postscript)
