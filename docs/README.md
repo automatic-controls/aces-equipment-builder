@@ -272,7 +272,7 @@ To refer to the *m<sup>th</sup>* selected element of the *n<sup>th</sup>* group 
 
 To reduce synchronization time and conserve disk space, library sections can be reused. Any initialization statement containing a slash (`/` or `\`) is treated as a [reference path](#reference-paths) to another section. Relative paths are resolved from the context of the folder containing the configuration file.
 
-To use initialization references properly, you must understand the order in which the application loads sections of the library. You can only reference items that have been previously loaded. The application loads sections using a depth-first search starting with the root library folder.
+To use initialization references properly, you must understand the order in which the application loads sections of the library. You can only reference items that have been previously loaded. The application loads sections using a depth-first search starting with the root library folder. Note that configuration files are processed before loading children, so a configuration file cannot initialize a reference to any descendent of its parent folder.
 
 #### Example
 
@@ -280,11 +280,11 @@ To use initialization references properly, you must understand the order in whic
 
 ### Initialization Modifiers
 
-Each item has three important internal properties: `selected`, `visible`, and `locked`. Clicking on an unlocked item toggles whether it is selected. Locked items cannot be manually selected or deselected by the user. An item is included in in the generated script when it is selected (additionally, all parents must be selected). An item is shown to the user when it is visible (additionally, all parents must be selected and visible).
+Each item has three important internal properties: `selected`, `visible`, and `locked`. Clicking on an unlocked item toggles whether it is selected. Locked items cannot be manually selected or deselected by the user. An item is included in the generated script when it is selected (additionally, all parents must be selected). An item is shown to the user when it is visible (additionally, all parents must be selected and visible).
 
 Initialization modifiers change the default values of these internal properties. If no modifiers are given, then every item is initialized to be deselected, visible, and unlocked. The `+` modifier selects an item. The `-` modifier makes an item invisible. The `*` modifier locks an item.
 
-The `@` modifier does not affect internal properties, but can be used to create synthetic items (i.e, items without a corresponding file or folder in the *.logicsymbol* library). Since these items are not linked to any file resource, they are not included in the generated script. [*PreScript* and *PostScript*](#prescript-and-postscript) sections may be useful for synthetic items. It is also common to use [*If-Then* Statements](#if-then-statements) to select other hidden items based on whether a synthetic item is selected.
+The `@` modifier does not affect such properties, but can be used to create synthetic items (i.e, items without a corresponding file or folder in the *.logicsymbol* library). Since synthetic items are not linked to any file resource, they are not included in the generated script. [*PreScript* and *PostScript*](#prescript-and-postscript) sections may be useful for synthetic items. It is also common to use [*If-Then* Statements](#if-then-statements) to select other hidden items based on whether a synthetic item is selected.
 
 | Modifier | Description |
 | - | - |
@@ -293,8 +293,11 @@ The `@` modifier does not affect internal properties, but can be used to create 
 | `*` | Initializes an item to be locked by default. |
 | `@` | Creates a synthetic item (not linked to any files). |
 
+These modifiers can be used in any combination. However, the `@` modifier cannot be used with initialization references. Initialization references inherit whether they are synthetic from the original item.
+
 #### Example
 
+![](init_mod_tree.png) ![](init_mod_config1.png) ![](init_mod_config2.png) ![](init_mod_gui.png)
 
 ### Property Retrieval
 
