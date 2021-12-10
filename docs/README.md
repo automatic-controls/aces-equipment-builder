@@ -1,5 +1,20 @@
 # ACES Equipment Builder
 
+## Contents
+
+- [Overview](#overview)
+- [Installation](#installation)
+- [Uninstallation](#uninstallation)
+- [Basic Operation](#basic-operation)
+- [Keyboard Shortcuts](#keyboard-shortcuts)
+- [Right-Click Context Menu](#right-click-context-menu)
+- [Application Settings](#application-settings)
+- [Remote Directory Settings](#remote-directory-settings)
+- [Favorites *logicsymbols* and *logic-scripts*](#favorite-logicsymbols-and-logic-scripts)
+- [Library Configuration Essentials](#library-configuration-essentials)
+- [*Visual Studio Code*](#visual-studio-code)
+- [Advanced Library Configuration](#advanced-library-configuration)
+
 ## Overview
 
 This program is a desktop application that interfaces with *WebCTRL* to generate *EIKON* scripts using custom *.logicsymbol* libraries. *ACES EB* is also capable of maintaining a shared set of favorite *.logicsymbol* and *.logic-script* files. *ACES EB* was developed for *Windows* and has not been tested on *Mac* or *Linux* operating systems.
@@ -174,6 +189,21 @@ Any text editor (e.g, *Notepad*) can be used to edit *.logicsymbol* library conf
 
 This section serves as a reference for *.logicsymbol* library configuration file syntax. Refer to [Library Configuration Essentials](#library-configuration-essentials) before diving into this section.
 
+- [Direct Initialization](#direct-initialization)
+- [Comments](#comments)
+- [Display Names](#display-names)
+- [Groupings](#groupings)
+- [Reference Paths](#reference-paths)
+- [Initialization by Reference](#initialization-by-reference)
+- [Property Retrieval](#property-retrieval)
+- [Boolean Expressions](#boolean-expressions)
+- [Ternary Operators](#ternary-operators)
+- [*If-Then* Statments](#if-then-statments)
+- [*Value* Statements](#value-statements)
+- [*Condition* Statements](#condition-statements)
+- [*PreScript* and *PostScript*](#prescript-and-postscript)
+- [Complete Example](#complete-example)
+
 ### Direct Initialization
 
 #### Description
@@ -221,9 +251,9 @@ As shown in the example, it is possible to include the same file twice; however,
   - Any positive integer or `INF` to specify infinity.
 
 #### Description
-- Specifies a grouping of items which affects the application in the following ways.
-  - If less than `min` items are selected, then grouped items are shown in red, and an error is thrown when the user attempts to generate a script.
-  - When `max` items are selected, the leftover items are hidden, effectively preventing the user from exceeding `max` selections.
+Specifies a grouping of items which affects the application in the following ways.
+- If less than `min` items are selected, then grouped items are shown in red, and an error is thrown when the user attempts to generate a script.
+- When `max` items are selected, the leftover items are hidden, effectively preventing the user from exceeding `max` selections.
 
 #### Example
 
