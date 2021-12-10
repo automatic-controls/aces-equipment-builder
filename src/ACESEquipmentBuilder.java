@@ -1361,8 +1361,9 @@ public class ACESEquipmentBuilder {
               if (ret instanceof Symbol){
                 tmpItem = new Symbol(ret.file);
                 tmpItem.originalName = name==null?toTitleCase(str):name;
-                if (!ret.synthetic){
-                  String tmp = ret.file.getPath().replace('\\','/');
+                tmpItem.synthetic = ret.synthetic;
+                if (!tmpItem.synthetic){
+                  String tmp = tmpItem.file.getPath().replace('\\','/');
                   tmpItem.preScript = "  symbol('"+tmp.substring(0,tmp.length()-12)+"')";
                 }
               }else{
