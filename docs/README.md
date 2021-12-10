@@ -176,25 +176,37 @@ This section serves as a reference for *.logicsymbol* library configuration file
 
 ### Direct Initialization
 
+#### Description
+
 Initialization statements are used to load a file or folder into the application. The configuration file must be in the same directory as the item being initialized. If a folder does not have a configuration file, then all contents are loaded. Do not include *.logicsymbol* extensions in the configuration file.
+
+#### Example
 
 ![](direct_init_tree.png) ![](direct_init_gui.png) ![](direct_init_config.png)
 
 ### Comments
 
+#### Description
+
 *Java*-style comments are supported in configuration files. Comments are ignored by the application. Single-line comments start with `//`. Multi-line comments begin with `/*` and end with `*/`. For maximum compatibility, comments should be placed on new lines.
 
 It is also possible to mark a single-line or multi-line section as *developer-only*. These sections will only load into the application when *developer mode* is active. When *developer mode* is not active, these sections are treated as regular comments. Single-line developer comments start with `///`. Multi-line developer comments begin with `/**` and end with `*/`. Developer comments may be combined with the `AllowSync` [setting](#remote-directory-settings) to control which *.logicsymbol* library sections are visible to users.
+
+#### Example
 
 ![](comment_types.png)
 
 ### Display Names
 
+#### Description
+
 The display name of each item as shown in the application may be changed by enclosing the new name in double quotes. Certain special characters may be included in display names by enclosing the Unicode hex value in curly braces. An example is shown below where subscript *2* is shown using hex-code *2082*. Other common hex codes can be found on the internet. Use a backslash to escape the following special characters `\{}[]<>?:`
+
+#### Example
 
 ![](display_name_tree.png) ![](display_name_gui.png) ![](display_name_config.png)
 
-As shown in the example, it is possible to include the same file twice; however, this is not recommended. Generally, it is a bad idea to have two items with identical reference names in the same folder. In this case, the common reference name is *co2*. Also refer to [Property Retrieval](#property-retrieval) and [Ternary Operator](#ternary-operator).
+As shown in the example, it is possible to include the same file twice; however, this is not recommended. Generally, it is a bad idea to have two items with identical reference names in the same folder. In this case, the common reference name is *co2*. Refer to [Property Retrieval](#property-retrieval) and [Ternary Operators](#ternary-operators) for additional constructs that can be used with display names.
 
 ### Groupings
 
@@ -219,13 +231,25 @@ As shown in the example, it is possible to include the same file twice; however,
 
 ### Reference Paths
 
-Slashes are used as the standard path separator. By default, paths are resolved relatively to the surrounding context (usually the folder containing the configuration file). If a path starts with a slash, then it is resolved absolutely from the root library folder instead. `~` may be used to jump to parent folders. Path elements are case-sensitive and should not include *.logicsymbol* extensions.
+#### Description
 
-<!-- TODO: explain .../Group(n,m)/..., where it can be used (init, properties, if-then) -->
+This concept does not stand alone as a configuration file element, but is used by other constructs, like [Initialization by Reference](#initialization-by-reference), [Property Retrieval](#property-retrieval), and [*If-Then* Statements](#if-then-statements). Each element of a configuration file has a context that is associated to a location in the *.logicsymbol* library. Usually, this context is the folder which contains the configuration file. Reference paths are used to change the context by referring to another location in the library.
+
+Slashes are used as the standard path separator. By default, paths are resolved relatively to the surrounding context. If a path starts with a slash, then it is resolved absolutely from the root library folder instead. `~` may be used to jump to the parent context. Path elements are case-sensitive and should not include *.logicsymbol* extensions.
+
+To refer to the *m<sup>th</sup>* selected element of the *n<sup>th</sup>* group defined at the current context, the syntax `...\Group(n,m)\...` may be used. It is assumed that the current context has defined at least *n* groups in the corresponding configuration file.
+
+#### Example
+
+![](ref_tree.png) ![](ref_config2.png) ![](ref_config1.png)
 
 ### Initialization by Reference
 
-To reduce synchronization time and conserve disk space, library sections can be reused. Any initialization statement containing a slash (`/` or `\`) is treated as a [reference path](#reference-paths) to another section. Relative paths are resolved from the folder containing the configuration file.
+#### Description
+
+To reduce synchronization time and conserve disk space, library sections can be reused. Any initialization statement containing a slash (`/` or `\`) is treated as a [reference path](#reference-paths) to another section. Relative paths are resolved from the context of the folder containing the configuration file.
+
+#### Example
 
 <!-- TODO: describe initialization order with example diagram -->
 
@@ -241,7 +265,7 @@ To reduce synchronization time and conserve disk space, library sections can be 
 
 <!-- TODO: explain syntax and where it can be used (ternary, condition, if-then) -->
 
-### Ternary Operator
+### Ternary Operators
 
 <!-- TODO: explain syntax [expr?str1:str2] and where it can be used (display names, condition) -->
 
@@ -264,13 +288,3 @@ To reduce synchronization time and conserve disk space, library sections can be 
 ### Complete Example
 
 <!-- TODO: example which includes everything -->
-
-
-<!-- General TODO
-   put ACES EB release zip archive on GitHub
-   finish this readme file
-   enroll in FSA with Insperity
-   update tinypulse goals
-   respond to tinypulse survey
-   update index repository to include what I worked on this week
--->
