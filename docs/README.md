@@ -338,7 +338,7 @@ The syntax for property retrieval is used by other constructs, like [Display Nam
 
 - `item` - Indicates the item that this statement applies to. If `item` is unspecified, then this statement applies to the parent directory (as specified by the location of this configuration file).
 - `def` - The default value.
-  - Any integer that satisfies `min<=def<=max`.
+  - Any integer that satisfies `min`&#8804;`def`&#8804;`max`.
 - `min` - The minimum value.
   - Any integer or `-INF` to specify negative infinity.
 - `inc` - The increment used for value modification.
@@ -357,19 +357,46 @@ The syntax for property retrieval is used by other constructs, like [Display Nam
 
 ### Ternary Operators
 
-Ternary operators can be used in [Display Names](#display-names) and [*Condition* Statement](#condition-statements) messages.
+Ternary operators can be used in [Display Names](#display-names) and [*Condition* Statement](#condition-statements) messages. The syntax for a ternary operator is `[expr?msg1:msg2]` where *expr* is any [Boolean Expression](#boolean-expressions). If *expr* evaluates to `1` (*true*), then the ternary operator expands to the contents of *msg1*. If *expr* evaluates to `0` (*false*), then the ternary operator expands to the contents of *msg2*. Ternary operators can be arbitrarily nested. The following example shows how ternary operators can be used to dynamically update display names.
 
-<!-- TODO: explain syntax [expr?str1:str2] and where it can be used (display names, condition) -->
+#### Example
+
+![](ternary_tree.png) ![](ternary_config.png) ![](ternary_gui_1.png) ![](ternary_gui_2.png) ![](ternary_gui_3.png)
 
 ### Boolean Expressions
 
-Boolean expressions are used for [Ternary Operators](#ternary-operators), [*Condition* Statements](#condition-statements), and [*If-Then* Statements](#if-then-statements).
+Boolean expressions are used for [Ternary Operators](#ternary-operators), [*Condition* Statements](#condition-statements), and [*If-Then* Statements](#if-then-statements). Boolean expressions must evaluate to either `1` or `0` (*true* and *false*, respectively). The standard logical operators are supported with the usual precedences. Parenthesis may be used to specify/override operator precedence. `&&` is the **AND** operator. `||` is the **OR** operator. `!` is the **NOT** operator. The only atypical behavior is that **NOT** operators *must* be immediately followed by a pair of parenthesis.
 
-<!-- TODO: explain syntax and where it can be used (ternary, condition, if-then) -->
+The standard numeric comparison operators are supported. `x==y` indicates *x* is equal to *y*. `x!=y` indicates *x* is not equal to *y*. `x<y` indicates *x* is less than *y*. `x<=y` indicates *x* is less than or equal to *y*. `x>y` indicates *x* is greater than *y*. `x>=y` indicates *x* is greater than or equal to *y*. Arithmetic is not supported.
+
+#### Example
+
+![](expr_tree.png) ![](expr_config.png) ![](expr_gui_1.png) ![](expr_gui_2.png)
 
 ### *Condition* Statements
 
-<!-- TODO: syntax and explanation -->
+*Condition* statements will throw an error message on script generation if the specified [Boolean Expression](#boolean-expressions) is not satisfied.
+
+#### Usage
+
+- `Condition(item, expr, "msg")`
+- `Condition(expr, "msg")`
+
+#### Parameters
+
+- `item` - Indicates the item that this statement applies to. If `item` is unspecified, then this statement applies to the parent directory (as specified by the location of this configuration file).
+- `expr` - Any [Boolean Expression](#boolean-expressions).
+- `msg` - The error message to display if `expr` evaluates to `0` (false) when attempting to generate an *EIKON* script. Note this parameter must be enclosed in double quotes.
+
+#### Description
+
+- Specifies a condition (`expr`) that must be satisfied in order to generate a script. If `expr` is not satisfied, then `msg` will be shown to the user as an error message. Conditions are evaluated only when the corresponding `item` is selected.
+
+- [Unicode characters](#display-names), [Property Retrieval](#property-retrieval), and [Ternary Operators](#ternary-operators) are valid constructs within `msg`. [Reference Paths](#reference-paths) in `expr` and `msg` are resolved relative to the context of `item`.
+
+#### Example
+
+![](condition_tree.png) ![](condition_config.png) ![](condition_gui.png)
 
 ### *If-Then* Statements
 
