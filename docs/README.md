@@ -325,25 +325,55 @@ The syntax for property retrieval is used by other constructs, like [Display Nam
 
 ![](prop_ret_config.png) ![](prop_ret_tree.png) ![](prop_ret_gui.png)
 
-### Boolean Expressions
+### *Value* Statements
 
-<!-- TODO: explain syntax and where it can be used (ternary, condition, if-then) -->
+*Value* statements assign an item a range of numeric values. The user can pick a value from this range using the arrow-keys. To indicate which items have modifiable values, the icons become highlighted in orange when selected.
+
+#### Usage
+
+- `Value(item, def, min, inc, max)`
+- `Value(def, min, inc, max)`
+
+#### Parameters
+
+- `item` - Indicates the item that this statement applies to. If `item` is unspecified, then this statement applies to the parent directory (as specified by the location of this configuration file).
+- `def` - The default value.
+  - Any integer that satisfies `min<=def<=max`.
+- `min` - The minimum value.
+  - Any integer or `-INF` to specify negative infinity.
+- `inc` - The increment used for value modification.
+  - Any positive integer.
+- `max` - The maximum value.
+  - Any integer or `INF` to specify infinity.
+
+#### Description
+
+- If `item` is selected in the application, then arrow keys may be used to change the `VALUE` parameter corresponding to `item`. The arrow keys increase or decrease `VALUE` by `inc` with each keystoke. `VALUE` is constrained to lie between `min` and `max` (inclusive). `VALUE` is given the default value `def` on initialization.
+- It is recommended to show `VALUE` in the display name of `item`.
+
+#### Example
+
+![](value_tree.png) ![](value_config.png) ![](value_gui.png)
 
 ### Ternary Operators
 
+Ternary operators can be used in [Display Names](#display-names) and [*Condition* Statement](#condition-statements) messages.
+
 <!-- TODO: explain syntax [expr?str1:str2] and where it can be used (display names, condition) -->
 
-### *If-Then* Statements
+### Boolean Expressions
 
-<!-- TODO: @*+- modifiers, pre-expression, and property set syntax -->
+Boolean expressions are used for [Ternary Operators](#ternary-operators), [*Condition* Statements](#condition-statements), and [*If-Then* Statements](#if-then-statements).
 
-### *Value* Statements
-
-<!-- TODO: syntax and explanation -->
+<!-- TODO: explain syntax and where it can be used (ternary, condition, if-then) -->
 
 ### *Condition* Statements
 
 <!-- TODO: syntax and explanation -->
+
+### *If-Then* Statements
+
+<!-- TODO: @*+- modifiers, pre-expression, and property set syntax -->
 
 ### *PreScript* and *PostScript*
 
