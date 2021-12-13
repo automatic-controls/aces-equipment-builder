@@ -31,7 +31,7 @@ There are two installation methods depending on how your network administrators 
 
 - If you have been directed to use a script installer (e.g, *Installer.bat*) located on a shared network drive, running the installer will take care of everything for you. A shortcut to the *ACES EB* executable will be created on your desktop.
 
-- If you downloaded the latest release ([direct download link](<!-- TODO -->)), or were given a *.zip* archive, the first step is to unzip the archive and place the contents in an empty folder. The recommended folder location is "*%LocalAppData%/Programs/ACES Equipment Builder*". For convenience, place a shortcut to "*ACES Equipment Builder.exe*" on your desktop.
+- If you downloaded the latest release ([direct download link](https://github.com/automatic-controls/aces-equipment-builder/releases/download/2.0.2/aces-equipment-builder-v2.0.2.zip)), or were given a *.zip* archive, the first step is to unzip the archive and place the contents in an empty folder. The recommended folder location is "*%LocalAppData%/Programs/ACES Equipment Builder*". For convenience, place a shortcut to "*ACES Equipment Builder.exe*" on your desktop.
 
 You may be required to specify where the remote synchronization directory is located when you launch *ACES EB* for the first time. Usually, this will be a folder on a shared network drive.
 
@@ -86,6 +86,7 @@ When *developer mode* is not active, the following menu shows up when you right-
 | ![](../resources/edit.png) | *Edit Configuration Options* | Equivalent to **CTRL+O**. |
 | ![](../resources/bind.png) | *Rebind WebCTRL* | Equivalent to **CTRL+K**. |
 | ![](../resources/open.png) | *Open Log File* | Equivalent to **CTRL+L**. |
+| ![](../resources/open.png) | *Open Generated Script* | Requires *developer mode*. Opens the generated script using the default application set by the user (usually a text editor). |
 | ![](../resources/findall.png) | *Global Find/Replace* | Requires *developer mode*. Equivalent to **CTRL+F**. |
 | ![](../resources/edit.png) | *Configure* | Requires *developer mode*. Opens the configuration file corresponding to the root library folder using the default editor. You should [setup VSCode](#visual-studio-code) before using this shortcut. If a configuration file does not already exist, one will be created after prompting for confirmation. |
 
@@ -462,6 +463,3 @@ These sections are appended directly to the generated *EIKON* script. The applic
 For items corresponding to a *logicsymbol* file, the application automatically includes a statement equivalent to:
 
 ![](script_default.png)
-
-### Complete Example
-
