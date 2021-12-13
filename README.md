@@ -76,3 +76,5 @@ If you are using the [standard installation method](#standard), then it is recom
 - Separate the contents of [*ACESEquipmentBuilder.java*](src/ACESEquipmentBuilder.java) into many classes.
 - Add configuration option to toggle dark mode (requires duplicating the icons in [*resources*](resources)).
 - Compress *PNG* images in [*docs*](docs) to save space.
+- Add *Else* section to *If-Then* statements.
+- Add wildcard modifer at the end of reference paths in *Then* blocks.
