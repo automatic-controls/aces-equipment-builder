@@ -9,7 +9,7 @@ import java.nio.channels.*;
 import java.util.regex.*;
 public class ACESEquipmentBuilder {
   /** Used to determine whether updates are available */
-  private final static String VERSION = "2.0.1";
+  private final static String VERSION = "2.0.2";
   public volatile static String lineSeparator;
   public volatile static String configName;
   private volatile static String documentationWebsite;
@@ -207,6 +207,7 @@ public class ACESEquipmentBuilder {
     final JMenuItem popupLoad = new JMenuItem("Reload Library");
     final JMenuItem popupEditConfig = new JMenuItem("Edit Configuration Options");
     final JMenuItem popupLog = new JMenuItem("Open Log File");
+    final JMenuItem popupScript = new JMenuItem("Open Generated Script");
     final JMenuItem popupRebind = new JMenuItem("Rebind WebCTRL");
     final JMenuItem popupRegex = new JMenuItem();
     final JMenuItem popupOpen = new JMenuItem("Open");
@@ -221,6 +222,7 @@ public class ACESEquipmentBuilder {
     popupConfigure.setIcon(popupEditConfig.getIcon());
     popupLog.setIcon(Utilities.load("open.png"));
     popupOpen.setIcon(popupLog.getIcon());
+    popupScript.setIcon(popupLog.getIcon());
     popupDelete.setIcon(Utilities.load("delete.png"));
     popupRebind.setIcon(Utilities.load("bind.png"));
     popupRegex.setIcon(Utilities.load("findall.png"));
@@ -276,6 +278,11 @@ public class ACESEquipmentBuilder {
     popupLog.addActionListener(new ActionListener(){
       public void actionPerformed(ActionEvent e){
         openLog();
+      }
+    });
+    popupScript.addActionListener(new ActionListener(){
+      public void actionPerformed(ActionEvent e){
+        openScript();
       }
     });
     popupEditConfig.addActionListener(new ActionListener(){
@@ -566,6 +573,7 @@ public class ACESEquipmentBuilder {
               popup.add(popupRebind);
               popup.add(popupLog);
               if (devMode){
+                popup.add(popupScript);
                 popupRegex.setText("Global Find/Replace");
                 popup.add(popupRegex);
                 popup.add(popupConfigure);
@@ -941,6 +949,21 @@ public class ACESEquipmentBuilder {
         }
       }else{
         info("Cannot locate log file!");
+      }
+    }catch(Exception e){
+      error("Unexpected error occurred.\nPress CTRL+L for details.", e);
+    }
+  }
+  private static void openScript(){
+    try{
+      if (genScriptFile!=null && Files.exists(genScriptFile)){
+        try{
+          Desktop.getDesktop().open(genScriptFile.toFile());
+        }catch(Exception err){
+          error("Unable to open script file.", err);
+        }
+      }else{
+        info("Cannot locate script file!");
       }
     }catch(Exception e){
       error("Unexpected error occurred.\nPress CTRL+L for details.", e);
@@ -2311,7 +2334,7 @@ public class ACESEquipmentBuilder {
     }
     return false;
   }
-  private static boolean saveConfig(boolean exitOnCancel){
+  private static boolean saveConfig(boolean initial){
     boolean exit = false;
     try {
       if (!Files.exists(installation)){
@@ -2320,17 +2343,13 @@ public class ACESEquipmentBuilder {
       if (!Files.exists(mainConfig)){
         Files.createFile(mainConfig);
       }
-      if (aces==null){
+      if (aces==null && initial){
         String remlib = JOptionPane.showInputDialog(Main,"Remote Directory Path:","Configuration",JOptionPane.QUESTION_MESSAGE);
         focus();
         if (remlib==null){
-          if (exitOnCancel){
-            exit = true;
-            Files.delete(mainConfig);
-            System.exit(0);
-          }else{
-            remlib = "";
-          }
+          exit = true;
+          Files.delete(mainConfig);
+          System.exit(0);
         }
         initRemotePaths(remlib, true);
       }
@@ -2424,10 +2443,14 @@ public class ACESEquipmentBuilder {
     return false;
   }
   private static void initRemotePaths(String str, boolean updates){
-    aces = Paths.get(str);
-    acesConfig = aces.resolve("config.txt");
-    if (updates){
-      update();
+    if (str.isEmpty()){
+      aces = null;
+    }else{
+      aces = Paths.get(str);
+      acesConfig = aces.resolve("config.txt");
+      if (updates){
+        update();
+      }
     }
   }
   private static void initLocalPaths(String str, boolean updates){
@@ -2473,7 +2496,9 @@ public class ACESEquipmentBuilder {
         groupMax = b11.isSelected();
         suggestEntries = b12.isSelected();
         String remlib = (String)ret;
-        if (aces==null || (!remlib.isEmpty() && !aces.toString().equals(remlib))){
+        if (remlib.isBlank()){
+          aces = null;
+        }else if (aces==null || !aces.toString().equals(remlib)){
           initRemotePaths(remlib, true);
         }
         saveConfig(false);
