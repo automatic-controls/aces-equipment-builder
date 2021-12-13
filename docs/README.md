@@ -31,7 +31,7 @@ There are two installation methods depending on how your network administrators 
 
 - If you have been directed to use a script installer (e.g, *Installer.bat*) located on a shared network drive, running the installer will take care of everything for you. A shortcut to the *ACES EB* executable will be created on your desktop.
 
-- If you downloaded the latest release ([direct download link](https://github.com/automatic-controls/aces-equipment-builder/releases/download/2.0.2/aces-equipment-builder-v2.0.2.zip)), or were given a *.zip* archive, the first step is to unzip the archive and place the contents in an empty folder. The recommended folder location is "*%LocalAppData%/Programs/ACES Equipment Builder*". For convenience, place a shortcut to "*ACES Equipment Builder.exe*" on your desktop.
+- If you downloaded the latest release ([direct download link](https://github.com/automatic-controls/aces-equipment-builder/releases/download/v2.0.2/aces-equipment-builder-v2.0.2.zip)), or were given a *.zip* archive, the first step is to unzip the archive and place the contents in an empty folder. The recommended folder location is "*%LocalAppData%/Programs/ACES Equipment Builder*". For convenience, place a shortcut to "*ACES Equipment Builder.exe*" on your desktop.
 
 You may be required to specify where the remote synchronization directory is located when you launch *ACES EB* for the first time. Usually, this will be a folder on a shared network drive.
 
