@@ -197,11 +197,11 @@ This section serves as a reference for *.logicsymbol* library configuration file
 - [Initialization by Reference](#initialization-by-reference)
 - [Initialization Modifiers](#initialization-modifiers)
 - [Property Retrieval](#property-retrieval)
-- [Boolean Expressions](#boolean-expressions)
-- [Ternary Operators](#ternary-operators)
-- [*If-Then* Statements](#if-then-statements)
 - [*Value* Statements](#value-statements)
+- [Ternary Operators](#ternary-operators)
+- [Boolean Expressions](#boolean-expressions)
 - [*Condition* Statements](#condition-statements)
+- [*If-Then* Statements](#if-then-statements)
 - [*PreScript* and *PostScript*](#prescript-and-postscript)
 - [Complete Example](#complete-example)
 
@@ -371,7 +371,8 @@ The standard numeric comparison operators are supported. `x==y` indicates *x* is
 
 #### Example
 
-![](expr_tree.png) ![](expr_config.png) ![](expr_gui_1.png) ![](expr_gui_2.png)
+![](expr_tree.png) ![](expr_config.png)
+![](expr_gui_1.png) ![](expr_gui_2.png)
 
 ### *Condition* Statements
 
@@ -400,7 +401,37 @@ The standard numeric comparison operators are supported. `x==y` indicates *x* is
 
 ### *If-Then* Statements
 
-<!-- TODO: @*+- modifiers, pre-expression, and property set syntax -->
+`IF`-`THEN` statements are used to trigger actions in the application when certain conditions are met. The `IF` block specifies a list of conditions which are to be satisfied. The `THEN` block specifies a list of conditions to enforce when all `IF` block conditions have been satisfied. `IF`-`THEN` statements are evaluated only when the parent directory is selected (as specified by the location of this configuration file).
+
+#### Modifiers
+
+Either block can refer to an item using [Reference Paths](#reference-paths). Relative paths are resolved relative to the parent directory. Once an item has been specified, modifiers (listed below) tell the application what to do.
+
+| Modifer | Description |
+| - | - |
+| `+` | Requires that the item is selected. Additionally requires that all parents are selected. |
+| `!+` | Requires that the item is deselected. Also satisfied in `IF` blocks when any parent is deselected. |
+| `-` | Requires that the item is hidden. Also satisfied in `IF` blocks when any parent is hidden or deselected. |
+| `!-` | Requires that the item is visible. Additionally requires that all parents are selected and visible. |
+| `*` | Requires that the item is locked. |
+| `!*` | Requires that the item is unlocked. |
+| `@` | Tells the application to ignore parent properties for all other modifiers. For instance, `@+` requires the item is selected without imposing any conditions on whether parents are selected. |
+
+Modifers can be used in any combination and order. If no modifier is specified, then `+` is given as the default modifer. If `!` is the only modifier, then `!+` is given as the default modifier.
+
+#### Warning
+
+- Be careful not to create infinite loops.
+- `...\Group(n,m)\...` syntax should not be used in reference paths for `IF`-`THEN` statements since each path is resolved on initialization (to improve performance). However, group references can be used inside expressions as specified in the *Additional Syntax* section.
+
+#### Additional Syntax
+
+- `IF` blocks may contain any [Boolean Expression](#boolean-expressions).
+- `THEN` blocks can contain assignment expressions for the properties `VALUE`, `MINIMUM`, `MAXIMUM`, and `INCREMENT`. Refer to the example for syntax.
+
+#### Example
+
+![](if_then_config.png)
 
 ### *PreScript* and *PostScript*
 
