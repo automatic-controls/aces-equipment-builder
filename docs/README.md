@@ -258,7 +258,7 @@ Specifies a grouping of items which affects the application in the following way
 
 ### Reference Paths
 
-This concept does not stand alone as a configuration file element, but is used by other constructs, like [Initialization by Reference](#initialization-by-reference), [Property Retrieval](#property-retrieval), and [*If-Then* Statements](#if-then-statements). Each element of a configuration file has a context that is associated to a location in the *.logicsymbol* library. Usually, this context is the folder which contains the configuration file. Reference paths are used to change the context to another location in the library.
+Reference paths do not stand alone as a configuration file element, but they are used by other constructs, like [Initialization by Reference](#initialization-by-reference), [Property Retrieval](#property-retrieval), and [*If-Then* Statements](#if-then-statements). Each element of a configuration file has a context that is associated to a location in the *.logicsymbol* library. Usually, this context is the folder which contains the configuration file. Reference paths are used to change the context to another location in the library.
 
 Slashes are used as the standard path separator. By default, paths are resolved relatively to the surrounding context. If a path starts with a slash, then it is resolved absolutely from the root library folder instead. `~` may be used to jump to the parent context. Path elements are case-sensitive and should not include *.logicsymbol* extensions.
 
@@ -270,7 +270,7 @@ To refer to the *m<sup>th</sup>* selected element of the *n<sup>th</sup>* group 
 
 ### Initialization by Reference
 
-To reduce synchronization time and conserve disk space, library sections can be reused. Any initialization statement containing a slash (`/` or `\`) is treated as a [reference path](#reference-paths) to another section. Relative paths are resolved from the context of the folder containing the configuration file.
+To reduce synchronization time and conserve disk space, library sections can be reused. Any initialization statement containing a slash (`/` or `\`) is treated as a [reference path](#reference-paths) to another section. Relative paths are resolved from the context of the folder containing the configuration file. The reference names of these items are copied from the originals (e.g, you should not include the whole reference path again when including these items in a [grouping](#groupings)).
 
 To use initialization references properly, you must understand the order in which the application loads sections of the library. You can only reference items that have been previously loaded. The application loads sections using a depth-first search starting with the root library folder. Note that configuration files are processed before loading children, so a configuration file cannot initialize a reference to any descendent of its parent folder.
 
