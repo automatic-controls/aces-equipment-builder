@@ -9,7 +9,7 @@ import java.nio.channels.*;
 import java.util.regex.*;
 public class ACESEquipmentBuilder {
   /** Used to determine whether updates are available */
-  private final static String VERSION = "2.0.2";
+  private final static String VERSION = "2.0.3";
   public volatile static String lineSeparator;
   public volatile static String configName;
   private volatile static String documentationWebsite;
@@ -236,7 +236,7 @@ public class ACESEquipmentBuilder {
     });
     popupRegex.addActionListener(new ActionListener(){
       public void actionPerformed(ActionEvent e){
-        if (popupItem.x==null){
+        if (popupItem.x==null || popupItem.x.origin==null){
           regex(acesLib);
         }else if (popupItem.x instanceof Symbol){
           regex(popupItem.x.origin.toPath().getParent());
