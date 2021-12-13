@@ -435,8 +435,33 @@ Modifers can be used in any combination and order. If no modifier is specified, 
 
 ### *PreScript* and *PostScript*
 
-<!-- TODO: syntax and explanation -->
+These sections are appended directly to the generated *EIKON* script. The application generates the script using a depth-first traversal of selected items in the library starting at the root folder. When the application arrives at an item with attached `PreScript` and/or `PostScript` sections, then it append the `PreScript` section first and the `PostScript` section last. The application inserts other things between these two script blocks. If the item is a folder, then the contents generated from the folder's children are included between these sections. If the item is a *logicsymbol*, then the application includes a statement that inserts the file to the bottom of the *EIKON* control program.
+
+[Property Retrieval](#property-retrieval) can be used within `PreScript` and `PostScript` sections. To minimize interference, all property retrieval statements must be additionally enclosed in square brackets.
+
+#### Usage
+
+- `PreScript(item)[ ... ]`
+- `PreScript()[ ... ]`
+- `PostScript(item)[ ... ]`
+- `PostScript()[ ... ]`
+
+#### Parameters
+
+- `item` - When `item` is selected, the contents of this codeblock will be included in the generated script. If `item` is unspecified, then contents are included whenever the parent directory is selected (as specified by the location of this configuration file).
+
+#### Desciption
+
+- Specifies a codeblock that is included in the generated *EIKON* script when `item` is selected (also requires that all parents of `item` are selected). `[< refpath | property >]` constructs may be used to retrieve application properties within codeblocks. `refpath` is resolved relative to `item`.
+
+#### Example
+
+![](script_config.png)
+![](script_generated.png)
+
+For items corresponding to a *logicsymbol* file, the application automatically includes a statement equivalent to:
+
+![](script_default.png)
 
 ### Complete Example
 
-<!-- TODO: example which includes everything -->
