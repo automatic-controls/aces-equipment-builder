@@ -1,3 +1,8 @@
+/*
+  BSD 3-Clause License
+  Copyright (c) 2021, Automatic Controls Equipment Systems, Inc.
+  Author: Cameron Vogt (@cvogt729)
+*/
 public class ItemGroup {
   public Item[] items = null;
   public int len = 0;
