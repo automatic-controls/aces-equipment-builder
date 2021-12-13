@@ -301,7 +301,29 @@ These modifiers can be used in any combination. However, the `@` modifier cannot
 
 ### Property Retrieval
 
-<!-- TODO: explain syntax <path|var>, where it can be used (expression, display name, condition, if-then), and provide table of properties. -->
+The syntax for property retrieval is used by other constructs, like [Display Names](#display-names), [Boolean Expressions](#boolean-expressions), [*If-Then* Statements](#if-then-statements), and [*PreScript/PostScript*](#prescript-and-postscript) sections. The syntax for property retrieval is `<refpath | property>` where *refpath* is a [reference path](#reference-paths) evaluated either absolutely or relatively to the surrounding context, and *property* is one of the fields specified in the following table. *refpath* can be left blank if you want to evaluate a property directly on the surrounding context. Note that all boolean properties are expanded to either `1` or `0` (*true* and *false*, respectively). The context of a display name resolves to the corresponding item (**not** the parent folder of the enclosing configuration file).
+
+| Property | Description |
+| - | - |
+| `SELECTED` | Whether the item is selected to be included in script generation. Requires that all parents are selected. |
+| `@SELECTED` | Directly retrieves the internal `selected` property. Restrictions are not imposed upon parents of the item. |
+| `VISIBLE` | Whether this item is visible to the user. Requires that all parents are selected and visible. |
+| `@VISIBLE` | Directly retrieves the internal `visible` property. Restrictions are not imposed upon parents of the item. |
+| `LOCKED` | Directly retrieves the internal `locked` property. When an item is locked, it cannot be manually selected or deselected by the user. |
+| `EXISTS` | Whether an item exists. This property is primary used for debugging (to ensure the reference path is typed out correctly), but it can be used with `...\Group(n,m)\...` syntax to determine whether an item of a group has been selected. |
+| `VALUECHANGING` | Becomes *true* when an item with a corresponding [*Value* statement](#value-statements) has been clicked on. Indicates that the arrow-keys are currently being used change the value of an item. |
+| `VALUE` | The value assigned to this item. This primarily applies to items that have corresponding [*Value* statements](#value-statements), but it may be used as a hidden variable for other items if necessary. |
+| `MAXIMUM` | Provides an upper-bound on the value parameter. |
+| `MINIMUM` | Provides a lower-bound on the value parameter. |
+| `INCREMENT` | Specifies how much the value parameter changes when the user presses one of the arrow-keys. |
+| `DISPLAYNAME` | The display name of the item as shown to the user. |
+| `REFERENCENAME` | The reference name of the item. |
+| `EQUIPMENTNAME` | The equipment name entered into the application by the user. |
+| `FILEPATH` | The file-path of the locally stored file corresponding to the item. *logicsymbol* extensions are omitted. |
+
+#### Example
+
+![](prop_ret_config.png) ![](prop_ret_tree.png) ![](prop_ret_gui.png)
 
 ### Boolean Expressions
 
