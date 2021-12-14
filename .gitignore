@@ -3,3 +3,4 @@ testing
 install/**
 !install/README.txt
 **/*.zip
+**/*.vsix
