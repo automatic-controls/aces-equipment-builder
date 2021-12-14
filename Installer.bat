@@ -27,7 +27,6 @@ if exist "%shortcut%" (
 )
 call :createShortcut "%shortcut%" "%install%\ACES Equipment Builder.exe"
 
-
 echo Operation completed.
 
 :: Launch the application
@@ -51,4 +50,24 @@ exit
   if exist "%shortcutVBS%" (
     del /f /q "%shortcutVBS%"
   )
-  exit /b
+exit /b
+
+:: OPTIONAL function which could be used to auto-update the corresponding VSCode extension
+:vscode
+  call code --version >nul 2>nul
+  if "%ERRORLEVEL%" EQU "0" (
+    echo Examining VSCode installation...
+    setlocal EnableDelayedExpansion
+      set "ver="
+      for /f "tokens=2 delims=@" %%i in ('code --list-extensions --show-versions ^| findstr /L "ACES.aces-eb-language-support@"') do (
+        set "ver=%%i"
+      )
+      if "!ver!" NEQ "1.0.2" (
+        if "!ver!" NEQ "" (
+          call code --uninstall-extension ACES.aces-eb-language-support
+        )
+        call code --install-extension "%~dp0aces-eb-language-support.vsix"
+      )
+    endlocal
+  )
+exit /b
