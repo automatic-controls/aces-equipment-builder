@@ -31,7 +31,7 @@ There are two installation methods depending on how your network administrators 
 
 - If you have been directed to use a script installer (e.g, *Installer.bat*) located on a shared network drive, running the installer will take care of everything for you. A shortcut to the *ACES EB* executable will be created on your desktop.
 
-- If you downloaded the latest release ([direct download link](https://github.com/automatic-controls/aces-equipment-builder/releases/download/v2.0.2/aces-equipment-builder-v2.0.2.zip)), or were given a *.zip* archive, the first step is to unzip the archive and place the contents in an empty folder. The recommended folder location is "*%LocalAppData%/Programs/ACES Equipment Builder*". For convenience, place a shortcut to "*ACES Equipment Builder.exe*" on your desktop.
+- If you downloaded the latest release ([direct download link](https://github.com/automatic-controls/aces-equipment-builder/releases/latest/download/aces-equipment-builder.zip)), or were given a *.zip* archive, the first step is to unzip the archive and place the contents in an empty folder. The recommended folder location is "*%LocalAppData%/Programs/ACES Equipment Builder*". For convenience, place a shortcut to "*ACES Equipment Builder.exe*" on your desktop.
 
 You may be required to specify where the remote synchronization directory is located when you launch *ACES EB* for the first time. Usually, this will be a folder on a shared network drive.
 
@@ -179,7 +179,7 @@ Any text editor (e.g, *Notepad*) can be used to edit *.logicsymbol* library conf
 
 1. Install the [*ACES EB* extension](https://github.com/automatic-controls/vscode-aces-equipment-builder) for *VSCode*. This extension provides language support for *ACES EB* configuration files.
 
-   - Download the latest *.vsix* extension release file ([direct download link](https://github.com/automatic-controls/vscode-aces-equipment-builder/releases/download/v1.0.1/aces-eb-language-support-1.0.1.vsix)), and then [install](https://code.visualstudio.com/docs/editor/extension-marketplace#_install-from-a-vsix) the extension in *VSCode*.
+   - Download the latest *.vsix* extension release file ([direct download link](https://github.com/automatic-controls/vscode-aces-equipment-builder/releases/latest/download/aces-eb-language-support.vsix)), and then [install](https://code.visualstudio.com/docs/editor/extension-marketplace#_install-from-a-vsix) the extension in *VSCode*.
 
      ![](vscode_vsix_install.png)
 
