@@ -14,7 +14,8 @@ import java.nio.channels.*;
 import java.util.regex.*;
 public class ACESEquipmentBuilder {
   /** Used to determine whether updates are available */
-  private final static String VERSION = "2.0.3";
+  private final static String VERSION = "2.0.4";
+  private volatile static String localVersionIdentifier = "";
   public volatile static String lineSeparator;
   public volatile static String configName;
   private volatile static String documentationWebsite;
@@ -2160,6 +2161,7 @@ public class ACESEquipmentBuilder {
             info("Unrecognized entry in remote configuration file.\n"+acesConfig.toString()+'\n'+str);
           }
         }
+        in.close();
         if (isNewerVersion(ver)){
           if (script==null){
             info("Please install version "+ver+" of ACES Equipment Builder.");
@@ -2178,13 +2180,15 @@ public class ACESEquipmentBuilder {
             }
           }
         }
-        in.close();
       }else{
         File f = acesConfig.toFile();
         if (f.createNewFile()){
           BufferedWriter out = new BufferedWriter(new FileWriter(f,false));
-          out.write("Version="+VERSION+lineSeparator);
-          out.write("UpdateScript="+lineSeparator);
+          out.write("Version="+VERSION);
+          if (!localVersionIdentifier.isEmpty()){
+            out.write('-'+localVersionIdentifier);
+          }
+          out.write(lineSeparator+"UpdateScript="+lineSeparator);
           out.write("AllowSync="+allowSync+lineSeparator);
           out.write("Library=Library"+lineSeparator);
           out.write("Favorites=Favorites"+lineSeparator);
@@ -2207,14 +2211,28 @@ public class ACESEquipmentBuilder {
     }
   }
   private static boolean isNewerVersion(String ver){
-    if (ver==null || VERSION.equals(ver)){
-      return false;
-    }
     try{
+      if (ver==null){
+        return false;
+      }
+      String localID = "";
+      int a = ver.indexOf('-');
+      if (a!=-1){
+        localID = ver.substring(a+1,ver.length()).trim();
+        ver = ver.substring(0,a);
+      }
+      if (!localVersionIdentifier.equals(localID)){
+        localVersionIdentifier = localID;
+        saveConfig(false);
+        return true;
+      }
+      if (VERSION.equals(ver)){
+        return false;
+      }
       StringBuilder sb = new StringBuilder(4);
       final int len = VERSION.length();
       final int verLen = ver.length();
-      int a,b,i=0,j=0;
+      int b,i=0,j=0;
       char c;
       while (i<len && j<verLen){
         sb.setLength(0);
@@ -2317,6 +2335,8 @@ public class ACESEquipmentBuilder {
             suggestEntries = Boolean.valueOf(val);
           }else if (key.equals("SupportMessage")){
             supportMessage = val;
+          }else if (key.equals("VersionTag")){
+            localVersionIdentifier = val;
           }else{
             info("Unrecognized entry in primary configuration file:\n"+mainConfig.toString()+'\n'+str);
           }
@@ -2387,7 +2407,8 @@ public class ACESEquipmentBuilder {
     out.write("AllowGroupMaximums="+groupMax+lineSeparator);
     out.write("AllowIfThenStatements="+suggestEntries+lineSeparator);
     out.write("SupportMessage="+supportMessage+lineSeparator);
-    out.write("EmailTo="+emailTo);
+    out.write("EmailTo="+emailTo+lineSeparator);
+    out.write("VersionTag="+localVersionIdentifier);
     out.close();
   }
   private static boolean findWebCTRL(boolean updates, boolean save, boolean manual){
@@ -2475,6 +2496,10 @@ public class ACESEquipmentBuilder {
     setupWebCTRL(updates);
   }
   private static void editConfigOptions(){
+    String title = "Configuration Options v"+VERSION;
+    if (!localVersionIdentifier.isEmpty()){
+      title+='-'+localVersionIdentifier;
+    }
     JCheckBox b3 = new JCheckBox("Auto Synchronize", autoSync);
     JCheckBox b4 = new JCheckBox("Synchronize Library", syncLibrary);
     JCheckBox b5 = new JCheckBox("Synchronize Favorites", syncFavorites);
@@ -2487,7 +2512,7 @@ public class ACESEquipmentBuilder {
       JCheckBox b11 = new JCheckBox("Allow Group Maximums", groupMax);
       JCheckBox b12 = new JCheckBox("Allow If-Then Statements", suggestEntries);
       Object[] params = {b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,"Remote Directory Path:"};
-      Object ret = JOptionPane.showInputDialog(Main,params,"Configuration Options v"+VERSION,JOptionPane.OK_CANCEL_OPTION,icon,null,aces==null?"":aces.toString());
+      Object ret = JOptionPane.showInputDialog(Main,params,title,JOptionPane.OK_CANCEL_OPTION,icon,null,aces==null?"":aces.toString());
       focus();
       if (ret!=null){
         autoSync = b3.isSelected();
@@ -2519,7 +2544,7 @@ public class ACESEquipmentBuilder {
       }
     }else{
       Object[] params = {feedbackButton,b3,b4,b5,b6};
-      int ret = JOptionPane.showOptionDialog(Main,params,"Configuration Options v"+VERSION,JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE,icon,null,null);
+      int ret = JOptionPane.showOptionDialog(Main,params,title,JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE,icon,null,null);
       focus();
       if (ret==JOptionPane.OK_OPTION){
         autoSync = b3.isSelected();
