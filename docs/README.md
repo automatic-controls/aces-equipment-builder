@@ -156,7 +156,10 @@ The interface shown by the application directly corresponds to the file structur
 
 ### Naming Conventions
 
-All *.equipment* files should be renamed with the *.logicsymbol* extension before attempting library configuration. The following command prompt instruction can be used for bulk renaming: `for /r "S:\path\to\shared\library\root\folder" %i in (*.equipment) do @rename "%i" "%~ni.logicsymbol"`
+All *.equipment* files should be renamed with the *.logicsymbol* extension before attempting library configuration. The following command prompt instruction can be used for bulk renaming:
+```batch
+for /r "S:\path\to\shared\library\root\folder" %i in (*.equipment) do @rename "%i" "%~ni.logicsymbol"
+```
 
 *logicsymbol* filenames must be alphanumeric, lowercase, under *40* characters long, and use underscores instead of spaces. The application will automatically convert *logicsymbol* filenames to title-case, replacing underscores with spaces. Folder names are shown unmodified. Unlimited folder nesting is supported.
 
