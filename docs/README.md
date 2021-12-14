@@ -157,7 +157,7 @@ The interface shown by the application directly corresponds to the file structur
 ### Naming Conventions
 
 All *.equipment* files should be renamed with the *.logicsymbol* extension before attempting library configuration. The following command prompt instruction can be used for bulk renaming:
-```batch
+```
 for /r "S:\path\to\shared\library\root\folder" %i in (*.equipment) do @rename "%i" "%~ni.logicsymbol"
 ```
 
