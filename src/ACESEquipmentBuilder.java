@@ -1277,7 +1277,7 @@ public class ACESEquipmentBuilder {
             }
           }
           if (devMode && trim.endsWith("*/")){
-            str = trim.substring(0,trim.length()-3);
+            str = trim.substring(0,trim.length()-2);
             trim = str.trim();
           }
           if (trim.startsWith("//")){
