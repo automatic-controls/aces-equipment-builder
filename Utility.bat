@@ -96,7 +96,7 @@ echo.
   copy /y "%~dp0LICENSE" "%install%\LICENSE.txt" >nul
   if exist "%classes%" (
     del /F "%jar%" 2>nul
-    "%jdkBin%\jar" -c -M -f "%jar%" -C "%classes%" . -C "%res%" .
+    "%jdkBin%\jar" -c -M -f "%jar%" -C "%classes%" . -C "%res%" . -C "%~dp0." src
   ) else (
     echo Please use the 'build' command to compile source code.
   )
