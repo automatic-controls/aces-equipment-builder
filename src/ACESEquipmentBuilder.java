@@ -308,14 +308,15 @@ public class ACESEquipmentBuilder {
     });
 
     //Loads the configuration file and updates if necessary.
-    if (loadConfig(false)){
-      if (autoSync){
-        update();
-      }else if (aces!=null){
-        loadACESConfig(aces);
+    try{
+      if (loadConfig(false)){
+        if (autoSync){
+          update();
+        }
       }
-    }else{
       saveConfig(true);
+    }catch(Exception e){
+      error("Initialization error occurred.\nRefer to the log file (CTRL+L).", e);
     }
     Item.lastClicked = lib;
     lib.selected = true;
@@ -325,8 +326,7 @@ public class ACESEquipmentBuilder {
       error("Unable to load library.", e);
       lib.reset();
     }
-
-    Main = new JFrame("ACES Equipment Builder");
+    Main = new JFrame(devMode?"ACES Equipment Builder (Development Mode)":"ACES Equipment Builder");
     MLabel = new JLabel();
     Main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     Main.setBounds(200, 100, w, h);
@@ -408,6 +408,7 @@ public class ACESEquipmentBuilder {
           devCTRL = 0;
           devMode^=true;
           e.consume();//Prevents CTRL+V from doing the usual paste command
+          saveConfig(false);
           lib.reset();
           try{
             doLoad();
@@ -2162,7 +2163,8 @@ public class ACESEquipmentBuilder {
           }
         }
         in.close();
-        if (isNewerVersion(ver)){
+        final Container<String> newTag = new Container<String>();
+        if (isNewerVersion(ver, newTag)){
           if (script==null){
             info("Please install version "+ver+" of ACES Equipment Builder.");
           }else{
@@ -2170,6 +2172,10 @@ public class ACESEquipmentBuilder {
             focus();
             if (i==JOptionPane.YES_OPTION){
               try{
+                if (newTag.x!=null){
+                  localVersionIdentifier = newTag.x;
+                  saveConfig(false);
+                }
                 Logger.log("Updating to version "+ver);
                 Runtime.getRuntime().exec(script);
                 onExit();
@@ -2192,7 +2198,7 @@ public class ACESEquipmentBuilder {
           out.write("AllowSync="+allowSync+lineSeparator);
           out.write("Library=Library"+lineSeparator);
           out.write("Favorites=Favorites"+lineSeparator);
-          out.write("Scripts=Scripts"+lineSeparator);
+          out.write("Scripts=Scripts");
           out.close();
         }
       }
@@ -2210,10 +2216,17 @@ public class ACESEquipmentBuilder {
       acesScripts = loc.resolve("Scripts");
     }
   }
-  private static boolean isNewerVersion(String ver){
+  private static boolean isNewerVersion(String ver, Container<String> newTag){
     try{
       if (ver==null){
         return false;
+      }
+      if (ver.endsWith("-dev")){
+        if (!devMode){
+          return false;
+        }else{
+          ver = ver.substring(0, ver.length()-4);
+        }
       }
       String localID = "";
       int a = ver.indexOf('-');
@@ -2222,8 +2235,7 @@ public class ACESEquipmentBuilder {
         ver = ver.substring(0,a);
       }
       if (!localVersionIdentifier.equals(localID)){
-        localVersionIdentifier = localID;
-        saveConfig(false);
+        newTag.x = localID;
         return true;
       }
       if (VERSION.equals(ver)){
@@ -2263,7 +2275,7 @@ public class ACESEquipmentBuilder {
       }
       return i>=len && j<verLen;
     }catch(Exception e){
-      error("Version component probably exceeds Integer.MAX_VALUE\n"+acesConfig.toString(), e);
+      error("Version component probably exceeds "+Integer.MAX_VALUE+'\n'+acesConfig.toString(), e);
       return false;
     }
   }
@@ -2337,6 +2349,8 @@ public class ACESEquipmentBuilder {
             supportMessage = val;
           }else if (key.equals("VersionTag")){
             localVersionIdentifier = val;
+          }else if (key.equals("Developer")){
+            devMode = Boolean.valueOf(val);
           }else{
             info("Unrecognized entry in primary configuration file:\n"+mainConfig.toString()+'\n'+str);
           }
@@ -2352,7 +2366,7 @@ public class ACESEquipmentBuilder {
         }else{
           initLocalPaths(web,updates);
         }
-        return aces!=null && WebCTRL!=null;
+        return aces!=null;
       }
     }catch(Exception e){
       error("Unable to load primary configuration file.", true);
@@ -2408,7 +2422,8 @@ public class ACESEquipmentBuilder {
     out.write("AllowIfThenStatements="+suggestEntries+lineSeparator);
     out.write("SupportMessage="+supportMessage+lineSeparator);
     out.write("EmailTo="+emailTo+lineSeparator);
-    out.write("VersionTag="+localVersionIdentifier);
+    out.write("VersionTag="+localVersionIdentifier+lineSeparator);
+    out.write("Developer="+devMode);
     out.close();
   }
   private static boolean findWebCTRL(boolean updates, boolean save, boolean manual){
