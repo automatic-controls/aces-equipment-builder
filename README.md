@@ -33,7 +33,7 @@ For editing *.logicsymbol* library configuration files, it is recommended to use
 
 ### Standard
 
-The standard installation method requires that your clone of this repository is located on a shared network drive. People with access to the shared drive should run [*Installer.bat*](Installer.bat) to install *ACES EB* on their computer. Note that configuration defaults specified in *install/config.txt* will be copied to each user's computer. It is recommented to already have the remote synchronization directory specified in *install/config.txt*.
+The standard installation method requires that your clone of this repository is located on a shared network drive. People with access to the shared drive should run [*Installer.bat*](Installer.bat) to install *ACES EB* on their computer. It is recommended that *install/config.txt* contain `RemoteDirectoryPath`, `SupportMessage`, and `EmailTo` entries (refer to [settings](docs/README.md#application-settings)).
 
 ### Custom
 
@@ -45,11 +45,11 @@ The standard installation method requires that your clone of this repository is 
 - *LICENSE.txt*
 - *jre/\*\**
 
-If you want the install to include a *.logicsymbol* library, you should also include the *lib* folder. If you want to specify configuration defaults, you should include *config.txt*. For example, *config.txt* could specify the remote directory to synchronize *.logicsymbol* libraries against. Note that *lib* and *config.txt* will be generated in your [*install*](install) folder when the application is launched using the `exec` command.
+If you want the install to include a *.logicsymbol* library, you should also include the *lib* folder. If you want to specify configuration defaults, you should include *config.txt*. Note that *lib* and *config.txt* will be generated in your [*install*](install) folder when the application is launched using the `exec` command.
 
 ## Automated Updates
 
-This section describes how to push *ACES EB* application updates to all users synchronized to a shared library. Library synchronization occurs automatically; this section is only relevant if you want to push out source code updates. When a remote directory is selected, *ACES EB* will generate *config.txt* inside the chosen directory. This configuration file contains two entries which may be used to push out source code updates.
+This section describes how to push *ACES EB* application updates to all users synchronized to a shared library. Library synchronization occurs automatically; this section is only relevant if you want to push out updates to core application files. When a remote directory is selected, *ACES EB* will generate *config.txt* inside the chosen directory. This configuration file contains two entries which may be used to push out source code updates.
 
 - `Version` - The version of *ACES EB* as specified at the top of [*src/ACESEquipmentBuilder.java*](src/ACESEquipmentBuilder.java).
 - `UpdateScript` - The update script to launch. May be resolved absolutely or relatively to location of the remote directory.
@@ -57,6 +57,8 @@ This section describes how to push *ACES EB* application updates to all users sy
 When an instance of *ACES EB* attempts to synchronize with the remote directory, it checks the configuration file before doing anything else. If the internal version of *ACES EB* is less than the version listed in the configuration file, the application launches the update script and terminates itself. The update script will be passed a parameter specifying the installation location of *ACES EB* on the local machine.
 
 If you are using the [standard installation method](#standard), then it is recommented to set [*Installer.bat*](Installer.bat) as the update script. It is generally expected for the update script to relaunch an instance of *ACES EB* when updates are complete. If `UpdateScript` is unspecified or cannot be resolved, then the application will instead open up the remote directory using *Windows File Explorer*.
+
+If the `Version` string ends with *-dev*, then updates will only occur when the user is in *developer mode*. An optional tag may be included, like *1.0.0-tag* or *1.0.0-tag-dev*. The application stores the current tag in a local configuration entry: `VersionTag`. If the tag specified in the `Version` string does not match the local `VersionTag`, then the update script is invoked.
 
 ## Miscellaneous Information
   - [*icon.ico*](icon.ico) is used by *Launch4j* to set the icon for the executable wrapper, "*install/ACES Equipment Builder.exe*".
@@ -77,4 +79,4 @@ If you are using the [standard installation method](#standard), then it is recom
 - Add configuration option to toggle dark mode (requires duplicating the icons in [*resources*](resources)).
 - Compress *PNG* images in [*docs*](docs) to save space.
 - Add *Else* section to *If-Then* statements.
-- Add wildcard modifer at the end of reference paths in *Then* blocks.
+- Add wildcard selection at the end of reference paths in *Then* blocks.
