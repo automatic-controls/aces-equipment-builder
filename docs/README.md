@@ -209,7 +209,6 @@ This section serves as a reference for *.logicsymbol* library configuration file
 - [*Condition* Statements](#condition-statements)
 - [*If-Then* Statements](#if-then-statements)
 - [*PreScript* and *PostScript*](#prescript-and-postscript)
-- [Complete Example](#complete-example)
 
 ### Direct Initialization
 
