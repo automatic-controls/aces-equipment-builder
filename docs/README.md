@@ -103,7 +103,7 @@ When *developer mode* is not active, the following menu shows up when you right-
 
 ## Application Settings
 
-Only the first four settings are visible when *developer mode* is not active. The last two settings are never visible from within the application. They can be modified by editing the application's configuration file (*./config.txt* relative to the installation directory). Use **F3** to reload the configuration file if you make changes.
+Only the first four settings are visible when *developer mode* is not active. All settings can be modified at *./config.txt* relative to the installation directory. Use **F3** to reload the configuration file if you make changes.
 
 | Setting | Description |
 | - | - |
@@ -118,21 +118,23 @@ Only the first four settings are visible when *developer mode* is not active. Th
 | *Allow Group Maximums* | Specifies whether to allow *Group* maximums in the *.logicsymbol* library. |
 | *Allow If-Then Statements* | Specifies whether to allow *If-Then* statements in the *.logicsymbol* library. |
 | *Remote Directory Path* | Specifies the folder to synchronize against. This folder is typically located on a shared network drive. |
-| `WebCTRLPath` | Absolute path to the *WebCTRL* installation directory (e.g, *C:\\WebCTRL8.0*). This value is modified using **CTRL+K** or **CTRL+ALT+K**. |
-| `SupportMessage` | If any error occurs, this message will be included in the pop-up shown to the user. |
-| `EmailTo` | A semicolon-delimited list of email addresses (e.g, *abc&#65279;@gmail.com;def&#65279;@gmail.com*) to show when the "*Contact Engineering*" button is pressed. |
+| *WebCTRLPath* | Absolute path to the *WebCTRL* installation directory (e.g, *C:\\WebCTRL8.0*). This value is modified using **CTRL+K** or **CTRL+ALT+K**. |
+| *SupportMessage* | If any error occurs, this message will be included in the pop-up shown to the user. |
+| *EmailTo* | Semicolon-delimited list of email addresses (e.g, *abc&#65279;@gmail.com;def&#65279;@gmail.com*) to show when the "*Contact Engineering*" button is pressed. |
+| *VersionTag* | Used for version control unrelated to the application's source code. Refer to [developer documentation](../README.md#automated-updates) for more details. |
+| *Developer* | Whether the user is in *developer mode*. |
 
 ## Remote Directory Settings
 
 When you select a remote synchronization directory, the application will automatically generate *config.txt* in the selected folder. The following table describes the settings which can be found in *config.txt*. For additional details, refer to [developer documentation](../README.md#automated-updates).
 | Setting | Description |
 | - | - |
-| `Version` | The minimum application version compatible with the associated *.logicsymbol* library. This setting may be used to push application updates out to all connected users. Upon synchronization, each application will attempt to update if outdated. |
-| `UpdateScript` | The script to run when attempting to update. Resolved absolutely or relatively to the remote directory. |
-| `AllowSync` | When an application instance attempts to synchronize, it first checks this settings. If `AllowSync` is `false` and *developer mode* is not active, then synchronization is disabled. When modifying shared files, this settings can be used to control when changes become visible. |
-| `Library` | Relative path to the shared root *.logicsymbol* library folder. Resolved relatively to the remote directory. Default value is *Library*. |
-| `Favorites` | Relative path to the shared folder containing favorite *.logicsymbol* files. Resolved relatively to the remote directory. Default value is *Favorites*. |
-| `Scripts` | Relative path to the shared folder containing favorite *.logic-script* files. Resolved relatively to the remote directory. Default value is *Scripts*. |
+| *Version* | The minimum application version compatible with the associated *.logicsymbol* library. This setting may be used to push application updates out to all connected users. Upon synchronization, each application will attempt to update if outdated. |
+| *UpdateScript* | The script to run when attempting to update. Resolved absolutely or relatively to the remote directory. |
+| *AllowSync* | When an application instance attempts to synchronize, it first checks this settings. If `AllowSync` is `false` and *developer mode* is not active, then synchronization is disabled. When modifying shared files, this settings can be used to control when changes become visible. |
+| *Library* | Relative path to the shared root *.logicsymbol* library folder. Resolved relatively to the remote directory. Default value is *Library*. |
+| *Favorites* | Relative path to the shared folder containing favorite *.logicsymbol* files. Resolved relatively to the remote directory. Default value is *Favorites*. |
+| *Scripts* | Relative path to the shared folder containing favorite *.logic-script* files. Resolved relatively to the remote directory. Default value is *Scripts*. |
 
 ## Favorite *logicsymbols* and *logic-scripts*
 
