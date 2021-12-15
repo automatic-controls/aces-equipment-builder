@@ -8,7 +8,12 @@ if "%install%" EQU "" (
   set "install=%LocalAppData%\Programs\ACES Equipment Builder"
 )
 
-:: Ensure software developers don't try to update from the WIP instance of ACES EB
+:: Keep the VSCode extension up to date
+set "vsExtension=%~dp0aces-eb-language-support.vsix"
+set "vsExtVersion=1.0.2"
+if exist "%vsExtension%" call :vscode
+
+:: Safety check
 if "%install%" EQU "%~dp0install" (
   echo ACES EB is already up to date!
   echo Press any key to exit.
@@ -95,12 +100,11 @@ exit /b
       for /f "tokens=2 delims=@" %%i in ('code --list-extensions --show-versions ^| findstr /L "ACES.aces-eb-language-support@"') do (
         set "ver=%%i"
       )
-      :: Specify the target version here
-      if "!ver!" NEQ "1.0.2" (
+      if "!ver!" NEQ "%vsExtVersion%" (
         if "!ver!" NEQ "" (
           call code --uninstall-extension ACES.aces-eb-language-support
         )
-        call code --install-extension "%~dp0aces-eb-language-support.vsix"
+        call code --install-extension "%vsExtension%"
       )
     endlocal
   )
