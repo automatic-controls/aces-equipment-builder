@@ -10,14 +10,47 @@ if "%install%" EQU "" (
 
 :: Ensure software developers don't try to update from the WIP instance of ACES EB
 if "%install%" EQU "%~dp0install" (
-  echo You should not update using the WIP instances of ACES EB.
+  echo ACES EB is already up to date!
   echo Press any key to exit.
   pause >nul
   exit
 )
 
-:: Copy installation files to the specified directory
-robocopy "%~dp0install" "%install%" /MIR /XD "%~dp0install\lib" "%install%\lib" /XF "%~dp0install\log.txt" "%install%\log.txt"
+setlocal EnableDelayedExpansion
+
+  :: Retrieve properties from the previous configuration file
+  set "conf=%install%\config.txt"
+  set "exists=0"
+  set "Developer="
+  set "VersionTag="
+  set "WebCTRLPath="
+  set "AutoSync="
+  set "SyncLibrary="
+  set "SyncFavorites="
+  set "SyncScripts="
+  if exist "%conf%" (
+    set "exists=1"
+    for /f "usebackq tokens=1,* delims==" %%i in ("%conf%") do (
+      set "%%i=%%j"
+    )
+  )
+
+  :: Copy installation files to the specified directory
+  robocopy "%~dp0install" "%install%" /MIR /XD "%~dp0install\lib" "%install%\lib" /XF "%~dp0install\log.txt" "%install%\log.txt"
+
+  :: Write a few of the old properties to the new configuration file
+  if "%exists%" EQU "1" (
+    echo.
+    if "!WebCTRLPath!" NEQ "" echo WebCTRLPath=!WebCTRLPath!
+    if "!Developer!" NEQ "" echo Developer=!Developer!
+    if "!VersionTag!" NEQ "" echo VersionTag=!VersionTag!
+    if "!AutoSync!" NEQ "" echo AutoSync=!AutoSync!
+    if "!SyncLibrary!" NEQ "" echo SyncLibrary=!SyncLibrary!
+    if "!SyncFavorites!" NEQ "" echo SyncFavorites=!SyncFavorites!
+    if "!SyncScripts!" NEQ "" echo SyncScripts=!SyncScripts!
+  ) >> "%conf%"
+
+endlocal
 
 :: Create a shortbut to "ACES Equipment Builder.exe" on the desktop
 set "shortcut=%USERPROFILE%\Desktop\ACES Equipment Builder.lnk"
@@ -62,6 +95,7 @@ exit /b
       for /f "tokens=2 delims=@" %%i in ('code --list-extensions --show-versions ^| findstr /L "ACES.aces-eb-language-support@"') do (
         set "ver=%%i"
       )
+      :: Specify the target version here
       if "!ver!" NEQ "1.0.2" (
         if "!ver!" NEQ "" (
           call code --uninstall-extension ACES.aces-eb-language-support
