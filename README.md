@@ -56,7 +56,7 @@ This section describes how to push *ACES EB* application updates to all users sy
 
 When an instance of *ACES EB* attempts to synchronize with the remote directory, it checks the configuration file before doing anything else. If the internal version of *ACES EB* is less than the version listed in the configuration file, the application launches the update script and terminates itself. The update script will be passed a parameter specifying the installation location of *ACES EB* on the local machine.
 
-If you are using the [standard installation method](#standard), then it is recommented to set [*Installer.bat*](Installer.bat) as the update script. It is generally expected for the update script to relaunch an instance of *ACES EB* when updates are complete. If `UpdateScript` is unspecified or cannot be resolved, then the application will instead open up the remote directory using *Windows File Explorer*.
+If you are using the [standard installation method](#standard), then it is recommended to set [*Installer.bat*](Installer.bat) as the update script. It is generally expected for the update script to relaunch an instance of *ACES EB* when updates are complete. If `UpdateScript` is unspecified or cannot be resolved, then the application will instead open up the remote directory using *Windows File Explorer*.
 
 If the `Version` string ends with *-dev*, then updates will only occur when the user is in *developer mode*. An optional tag may be included, like *1.0.0-tag* or *1.0.0-tag-dev*. The application stores the current tag in a local configuration entry: `VersionTag`. If the tag specified in the `Version` string does not match the local `VersionTag`, then the update script is invoked.
 
