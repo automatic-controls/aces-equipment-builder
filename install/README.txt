@@ -8,8 +8,6 @@ Description
 
 Company
   Automatic Controls Equipment Systems, Inc.
-License
-  BSD-3-Clause
 Contributors
   Cameron Vogt (@cvogt729)
 
