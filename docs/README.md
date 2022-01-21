@@ -1,5 +1,7 @@
 # ACES Equipment Builder
 
+WebCTRL is a trademark of Automated Logic Corporation.  Any other trademarks mentioned herein are the property of their respective owners.
+
 ## Contents
 
 - [Overview](#overview)
@@ -16,8 +18,6 @@
 - [Advanced Library Configuration](#advanced-library-configuration)
 
 ## Overview
-
-WebCTRL is a trademark of Automated Logic Corporation.  Any other trademarks mentioned herein are the property of their respective owners.
 
 This program is a desktop application that interfaces with *WebCTRL* to generate *EIKON* scripts using custom *.logicsymbol* libraries. *ACES EB* is also capable of maintaining a shared set of favorite *.logicsymbol* and *.logic-script* files. *ACES EB* was developed for *Windows* and has not been tested on *Mac* or *Linux* operating systems.
 
